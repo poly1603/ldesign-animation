@@ -1,0 +1,95 @@
+{
+  "name": "@ldesign/animation",
+  "version": "1.0.0",
+  "description": "高性能动画库，支持CSS动画、JS动画、过渡效果和动画序列",
+  "type": "module",
+  "main": "./dist/ldesign-animation.umd.js",
+  "module": "./dist/ldesign-animation.es.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./dist/ldesign-animation.es.js",
+      "require": "./dist/ldesign-animation.umd.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./styles": "./dist/style.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "README.md",
+    "dist",
+    "examples"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "format": "prettier --write src",
+    "format:check": "prettier --check src",
+    "example": "tsx examples/basic-usage.ts",
+    "example:dev": "cd examples && pnpm dev",
+    "example:build": "cd examples && pnpm build",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "benchmark": "tsx scripts/benchmark.ts",
+    "bundle-analyzer": "tsx scripts/bundle-analyzer.ts",
+    "verify": "node verify-fixes.js",
+    "verify:simple": "node verify-fixes-simple.js",
+    "verify:latest": "node verify-latest-fixes.js",
+    "verify:performance": "node verify-performance.js",
+    "clean": "tsx scripts/clean.ts",
+    "prepublishOnly": "pnpm typecheck && pnpm test:run && pnpm build"
+  },
+  "keywords": [
+    "animation",
+    "transition",
+    "css-animation",
+    "js-animation",
+    "vue",
+    "vue3",
+    "typescript",
+    "performance",
+    "ldesign"
+  ],
+  "author": "LDesign Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ldesign/animation.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ldesign/animation/issues"
+  },
+  "homepage": "https://github.com/ldesign/animation#readme",
+  "peerDependencies": {
+    "vue": "^3.3.0",
+    "@ldesign/engine": "^1.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "@vitejs/plugin-vue": "^5.0.0",
+    "@vitest/coverage-v8": "^1.1.3",
+    "@vitest/ui": "^1.1.3",
+    "@vue/test-utils": "^2.4.3",
+    "eslint": "^8.56.0",
+    "jsdom": "^23.0.1",
+    "prettier": "^3.1.1",
+    "rimraf": "^5.0.5",
+    "tsx": "^4.20.3",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.0",
+    "vite-plugin-dts": "^3.7.0",
+    "vitepress": "^1.0.0",
+    "vitest": "^1.1.3",
+    "vue": "^3.4.3"
+  }
+}
