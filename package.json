@@ -1,0 +1,35 @@
+{
+  "name": "@ldesign/animation",
+  "version": "0.1.0",
+  "description": "LDesign 动画库 - CSS/JS 动画、过渡效果、滚动动画、物理动画",
+  "keywords": ["ldesign", "animation", "transition", "gsap", "motion"],
+  "author": "LDesign Team",
+  "license": "MIT",
+  "type": "module",
+  "main": "./lib/index.cjs",
+  "module": "./es/index.js",
+  "types": "./es/index.d.ts",
+  "scripts": {
+    "build": "ldesign-builder build -f esm,cjs,dts",
+    "dev": "ldesign-builder watch",
+    "lint": "eslint . --fix"
+  },
+  "dependencies": {
+    "@ldesign/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@ldesign/builder": "workspace:*",
+    "@antfu/eslint-config": "^6.0.0",
+    "eslint": "^9.18.0",
+    "typescript": "^5.7.3"
+  },
+  "peerDependencies": {
+    "vue": "^3.3.0",
+    "react": "^18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "vue": { "optional": true },
+    "react": { "optional": true }
+  }
+}
+
