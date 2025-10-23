@@ -7,7 +7,12 @@
     "animation",
     "transition",
     "gsap",
-    "motion"
+    "motion",
+    "vue",
+    "react",
+    "3d-transforms",
+    "filters",
+    "scroll-animation"
   ],
   "author": "LDesign Team",
   "license": "MIT",
@@ -38,6 +43,16 @@
       "import": "./es/physics/*.js",
       "require": "./lib/physics/*.cjs"
     },
+    "./react": {
+      "types": "./es/react/index.d.ts",
+      "import": "./es/react/index.js",
+      "require": "./lib/react/index.cjs"
+    },
+    "./react/*": {
+      "types": "./es/react/*.d.ts",
+      "import": "./es/react/*.js",
+      "require": "./lib/react/*.cjs"
+    },
     "./scroll/*": {
       "types": "./es/scroll/*.d.ts",
       "import": "./es/scroll/*.js",
@@ -62,7 +77,25 @@
       "types": "./es/utils/*.d.ts",
       "import": "./es/utils/*.js",
       "require": "./lib/utils/*.cjs"
-    }
+    },
+    "./vue": {
+      "types": "./es/vue/index.d.ts",
+      "import": "./es/vue/index.js",
+      "require": "./lib/vue/index.cjs"
+    },
+    "./vue/*": {
+      "types": "./es/vue/*.d.ts",
+      "import": "./es/vue/*.js",
+      "require": "./lib/vue/*.cjs"
+    },
+    "./es/vue/components/AnimatedBox.vue.css": "./es/vue/components/AnimatedBox.vue.css",
+    "./es/vue/components/DraggableBox.vue.css": "./es/vue/components/DraggableBox.vue.css",
+    "./es/vue/components/ScrollReveal.vue.css": "./es/vue/components/ScrollReveal.vue.css",
+    "./es/vue/index.css": "./es/vue/index.css",
+    "./lib/vue/components/AnimatedBox.vue.css": "./lib/vue/components/AnimatedBox.vue.css",
+    "./lib/vue/components/DraggableBox.vue.css": "./lib/vue/components/DraggableBox.vue.css",
+    "./lib/vue/components/ScrollReveal.vue.css": "./lib/vue/components/ScrollReveal.vue.css",
+    "./lib/vue/index.css": "./lib/vue/index.css"
   },
   "main": "./lib/index.cjs",
   "module": "./es/index.js",
@@ -77,8 +110,9 @@
     "lib"
   ],
   "scripts": {
-    "build": "ldesign-builder build -f esm,cjs,dts",
-    "dev": "ldesign-builder watch",
+    "build": "ldesign-builder build",
+    "build:watch": "ldesign-builder build --watch",
+    "dev": "ldesign-builder build --mode development --watch",
     "lint": "eslint . --fix"
   },
   "dependencies": {

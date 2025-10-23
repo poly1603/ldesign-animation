@@ -69,6 +69,9 @@ export * from './transition/types'
 export { Parallax, parallax } from './effects/parallax'
 export { ParticleSystem, createParticleSystem } from './effects/particle'
 export { typewriter, animateChars, splitText } from './effects/text'
+export * from './effects/transform3d'
+export * from './effects/filters'
+export * from './effects/path'
 
 // ============ 工具函数 ============
 export * from './utils/units'

@@ -9,6 +9,7 @@ export * from './flip'
 export * from './bounce'
 export * from './rotate'
 export * from './special'
+export * from './advanced'
 
 
 
