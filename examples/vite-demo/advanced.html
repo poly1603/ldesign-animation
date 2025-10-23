@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>@ldesign/animation - 高级演示</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0a0e27;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    .hero {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-title {
+      font-size: 80px;
+      font-weight: 900;
+      text-align: center;
+      opacity: 0;
+    }
+
+    .hero-subtitle {
+      font-size: 24px;
+      text-align: center;
+      opacity: 0;
+      margin-top: 20px;
+    }
+
+    .particles-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .section {
+      min-height: 100vh;
+      padding: 100px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .section:nth-child(even) {
+      background: #1a1e3a;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      opacity: 0;
+      transform: translateY(50px);
+    }
+
+    .card:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      opacity: 0.7;
+    }
+
+    .interactive-demo {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .draggable-playground {
+      height: 400px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      position: relative;
+      margin: 40px 0;
+    }
+
+    .draggable-item {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      cursor: move;
+      user-select: none;
+    }
+
+    .stats-panel {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      border-radius: 12px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      min-width: 200px;
+      backdrop-filter: blur(10px);
+    }
+
+    .stats-panel h3 {
+      margin-bottom: 15px;
+      font-size: 16px;
+      color: #667eea;
+    }
+
+    .stat-item {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stat-label {
+      opacity: 0.7;
+    }
+
+    .stat-value {
+      font-weight: bold;
+      color: #43e97b;
+    }
+
+    .timeline-controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 30px 0;
+    }
+
+    .btn {
+      padding: 12px 30px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      width: 0%;
+      transition: width 0.1s;
+    }
+
+    h2 {
+      font-size: 48px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 性能统计面板 -->
+  <div class="stats-panel">
+    <h3>📊 性能监控</h3>
+    <div class="stat-item">
+      <span class="stat-label">FPS:</span>
+      <span class="stat-value" id="fps">60</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">活动动画:</span>
+      <span class="stat-value" id="active">0</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">帧数:</span>
+      <span class="stat-value" id="frames">0</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">内存:</span>
+      <span class="stat-value" id="memory">-</span>
+    </div>
+  </div>
+
+  <!-- Hero 区域 -->
+  <div class="hero">
+    <canvas class="particles-bg" id="hero-particles"></canvas>
+    <div>
+      <h1 class="hero-title" id="hero-title">@ldesign/animation</h1>
+      <p class="hero-subtitle" id="hero-subtitle">高性能动画库 - 优化版演示</p>
+    </div>
+  </div>
+
+  <!-- 特殊动画预设 -->
+  <div class="section">
+    <div style="width: 100%; max-width: 1200px;">
+      <h2 id="special-title">特殊动画预设</h2>
+      <div class="demo-grid" id="special-grid">
+        <div class="card" data-animation="heartbeat">
+          <div class="card-icon">❤️</div>
+          <div class="card-title">心跳</div>
+          <div class="card-desc">Heartbeat</div>
+        </div>
+        <div class="card" data-animation="shake">
+          <div class="card-icon">🔔</div>
+          <div class="card-title">摇晃</div>
+          <div class="card-desc">Shake</div>
+        </div>
+        <div class="card" data-animation="wobble">
+          <div class="card-icon">🎯</div>
+          <div class="card-title">晃动</div>
+          <div class="card-desc">Wobble</div>
+        </div>
+        <div class="card" data-animation="flash">
+          <div class="card-icon">⚡</div>
+          <div class="card-title">闪烁</div>
+          <div class="card-desc">Flash</div>
+        </div>
+        <div class="card" data-animation="pulse">
+          <div class="card-icon">💓</div>
+          <div class="card-title">脉冲</div>
+          <div class="card-desc">Pulse</div>
+        </div>
+        <div class="card" data-animation="swing">
+          <div class="card-icon">🎪</div>
+          <div class="card-title">摆动</div>
+          <div class="card-desc">Swing</div>
+        </div>
+        <div class="card" data-animation="rubberBand">
+          <div class="card-icon">🎸</div>
+          <div class="card-title">橡皮筋</div>
+          <div class="card-desc">Rubber Band</div>
+        </div>
+        <div class="card" data-animation="jello">
+          <div class="card-icon">🍮</div>
+          <div class="card-title">果冻</div>
+          <div class="card-desc">Jello</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 交互式拖拽演示 -->
+  <div class="section">
+    <div class="interactive-demo">
+      <h2>🎮 交互式拖拽</h2>
+      <div class="draggable-playground" id="drag-playground">
+        <div class="draggable-item" id="drag1" style="background: #667eea; left: 50px; top: 50px;">1</div>
+        <div class="draggable-item" id="drag2" style="background: #4facfe; left: 200px; top: 50px;">2</div>
+        <div class="draggable-item" id="drag3" style="background: #43e97b; left: 50px; top: 200px;">3</div>
+        <div class="draggable-item" id="drag4" style="background: #fa709a; left: 200px; top: 200px;">4</div>
+      </div>
+      <p style="text-align: center; opacity: 0.7;">拖动方块体验惯性效果和边界碰撞</p>
+    </div>
+  </div>
+
+  <!-- 复杂 Timeline 演示 -->
+  <div class="section">
+    <div style="width: 100%; max-width: 800px;">
+      <h2>⏱️ 复杂 Timeline</h2>
+      <div class="timeline-controls">
+        <button class="btn" onclick="playComplexTimeline()">播放</button>
+        <button class="btn" onclick="pauseComplexTimeline()">暂停</button>
+        <button class="btn" onclick="restartComplexTimeline()">重启</button>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="timeline-progress"></div>
+      </div>
+      <div class="demo-grid" id="timeline-grid" style="margin-top: 40px;">
+        <div class="card" id="tl-card1">
+          <div class="card-icon">🎬</div>
+        </div>
+        <div class="card" id="tl-card2">
+          <div class="card-icon">🎨</div>
+        </div>
+        <div class="card" id="tl-card3">
+          <div class="card-icon">🎭</div>
+        </div>
+        <div class="card" id="tl-card4">
+          <div class="card-icon">🎪</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import {
+      to,
+      from,
+      keyframes,
+      createTimeline,
+      scrollFadeIn,
+      scrollSlideInUp,
+      draggable,
+      createParticleSystem,
+      engine
+    } from '@ldesign/animation'
+
+    // 性能监控
+    function updateStats() {
+      const stats = engine.getStats()
+      document.getElementById('fps').textContent = stats.fps
+      document.getElementById('active').textContent = stats.activeAnimations
+      document.getElementById('frames').textContent = stats.frameCount
+
+      if (performance.memory) {
+        const mb = (performance.memory.usedJSHeapSize / 1048576).toFixed(1)
+        document.getElementById('memory').textContent = mb + ' MB'
+      }
+
+      requestAnimationFrame(updateStats)
+    }
+    updateStats()
+
+    // Hero 区域动画
+    setTimeout(() => {
+      from('#hero-title', { y: -50, opacity: 0 }, {
+        duration: 1000,
+        easing: 'easeOutCubic'
+      })
+    }, 300)
+
+    setTimeout(() => {
+      from('#hero-subtitle', { y: 30, opacity: 0 }, {
+        duration: 800,
+        easing: 'easeOutCubic'
+      })
+    }, 600)
+
+    // 粒子背景
+    const canvas = document.getElementById('hero-particles')
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+    const particles = createParticleSystem(canvas, {
+      count: 80,
+      speed: 0.5,
+      size: 2,
+      color: 'rgba(255, 255, 255, 0.6)',
+      lifetime: 10000,
+      gravity: 0
+    })
+
+    // 持续发射粒子
+    setInterval(() => {
+      const x = Math.random() * canvas.width
+      const y = Math.random() * canvas.height
+      particles.emit(x, y, 1)
+    }, 100)
+
+    // 特殊动画卡片
+    const cards = document.querySelectorAll('#special-grid .card')
+    cards.forEach((card, index) => {
+      card.addEventListener('click', () => {
+        const animation = card.dataset.animation
+
+        // 动态导入并执行动画
+        import('@ldesign/animation').then(module => {
+          if (module[animation]) {
+            module[animation](card, { duration: 800 })
+          }
+        })
+      })
+    })
+
+    // 滚动触发卡片动画
+    scrollFadeIn('#special-title')
+    cards.forEach((card, index) => {
+      setTimeout(() => {
+        scrollSlideInUp(card, 50, {
+          duration: 600,
+          delay: index * 100
+        })
+      }, 0)
+    })
+
+    // 拖拽演示
+    const dragItems = ['#drag1', '#drag2', '#drag3', '#drag4']
+    const playground = document.getElementById('drag-playground')
+    const rect = playground.getBoundingClientRect()
+
+    dragItems.forEach(id => {
+      draggable(id, {
+        bounds: {
+          left: 0,
+          right: rect.width - 80,
+          top: 0,
+          bottom: rect.height - 80
+        },
+        inertia: true,
+        inertiaFriction: 0.92,
+        onDragStart: (e) => {
+          e.target.style.zIndex = 100
+          e.target.style.transform += ' scale(1.1)'
+        },
+        onDragEnd: (e) => {
+          e.target.style.zIndex = 1
+          e.target.style.transform = e.target.style.transform.replace('scale(1.1)', '')
+        }
+      })
+    })
+
+    // 复杂 Timeline
+    let complexTimeline = null
+    const progressBar = document.getElementById('timeline-progress')
+
+    window.playComplexTimeline = () => {
+      if (!complexTimeline) {
+        complexTimeline = createTimeline({
+          onUpdate: (progress) => {
+            progressBar.style.width = (progress * 100) + '%'
+          },
+          onComplete: () => {
+            console.log('✅ 复杂 Timeline 完成！')
+          }
+        })
+
+        // 创建复杂的时间轴序列
+        complexTimeline
+          .addLabel('start')
+          .to('#tl-card1', { y: -100, rotate: 360, scale: 1.5 }, { duration: 800 })
+          .to('#tl-card1', { y: 0, rotate: 0, scale: 1 }, { duration: 600 }, '+=200')
+          .addLabel('scene1')
+          .to('#tl-card2', { x: 100, rotateY: 180 }, { duration: 600 }, '<')
+          .to('#tl-card3', { scale: 1.3, rotateZ: 180 }, { duration: 600 }, '-=300')
+          .addLabel('scene2')
+          .to('#tl-card4', { y: -80, x: 50, rotate: 360 }, { duration: 800 })
+          .to(['#tl-card1', '#tl-card2', '#tl-card3', '#tl-card4'],
+            { scale: 1, rotate: 0, x: 0, y: 0, rotateY: 0, rotateZ: 0 },
+            { duration: 1000 })
+          .addLabel('end')
+      }
+      complexTimeline.play()
+    }
+
+    window.pauseComplexTimeline = () => {
+      complexTimeline?.pause()
+    }
+
+    window.restartComplexTimeline = () => {
+      progressBar.style.width = '0%'
+      complexTimeline?.restart()
+    }
+
+    console.log('✨ 高级演示已加载！')
+    console.log('📊 性能监控已启用')
+    console.log('🎮 交互式拖拽已就绪')
+  </script>
+</body>
+
+</html>
+

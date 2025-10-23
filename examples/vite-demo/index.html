@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>@ldesign/animation - 完整示例演示</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+  <div class="app">
+    <header class="header">
+      <h1>🎬 @ldesign/animation</h1>
+      <p>完整动画库演示 - v0.1.0</p>
+    </header>
+
+    <nav class="nav">
+      <button class="nav-btn active" data-section="basic">基础动画</button>
+      <button class="nav-btn" data-section="timeline">Timeline</button>
+      <button class="nav-btn" data-section="scroll">滚动动画</button>
+      <button class="nav-btn" data-section="physics">物理动画</button>
+      <button class="nav-btn" data-section="gesture">手势动画</button>
+      <button class="nav-btn" data-section="effects">高级效果</button>
+    </nav>
+
+    <main class="main">
+      <!-- 基础动画 -->
+      <section class="section active" id="basic">
+        <h2>基础动画 API</h2>
+
+        <div class="demo-card">
+          <h3>to() - 动画到目标值</h3>
+          <div class="demo-controls">
+            <button onclick="demos.basic.animateTo()">移动 + 旋转</button>
+            <button onclick="demos.basic.animateScale()">缩放</button>
+            <button onclick="demos.basic.animateOpacity()">透明度</button>
+            <button onclick="demos.basic.reset('basic-box1')">重置</button>
+          </div>
+          <div class="demo-area">
+            <div id="basic-box1" class="box gradient-purple">to()</div>
+          </div>
+        </div>
+
+        <div class="demo-card">
+          <h3>from() - 从起始值动画</h3>
+          <div class="demo-controls">
+            <button onclick="demos.basic.animateFrom()">淡入效果</button>
+            <button onclick="demos.basic.animateFromScale()">缩放进入</button>
+            <button onclick="demos.basic.reset('basic-box2')">重置</button>
+          </div>
+          <div class="demo-area">
+            <div id="basic-box2" class="box gradient-blue">from()</div>
+          </div>
+        </div>
+
+        <div class="demo-card">
+          <h3>fromTo() - 完整控制</h3>
+          <div class="demo-controls">
+            <button onclick="demos.basic.animateFromTo()">完整路径</button>
+            <button onclick="demos.basic.reset('basic-box3')">重置</button>
+          </div>
+          <div class="demo-area">
+            <div id="basic-box3" class="box gradient-green">fromTo()</div>
+          </div>
+        </div>
+
+        <div class="demo-card">
+          <h3>keyframes() - 关键帧动画</h3>
+          <div class="demo-controls">
+            <button onclick="demos.basic.animateKeyframes()">播放关键帧</button>
+            <button onclick="demos.basic.animateCircle()">圆形路径</button>
+            <button onclick="demos.basic.reset('basic-box4')">重置</button>
+          </div>
+          <div class="demo-area">
+            <div id="basic-box4" class="box gradient-orange">keyframes()</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Timeline 时间轴 -->
+      <section class="section" id="timeline">
+        <h2>Timeline 时间轴</h2>
+
+        <div class="demo-card">
+          <h3>顺序动画</h3>
+          <div class="demo-controls">
+            <button onclick="demos.timeline.playSequence()">播放</button>
+            <button onclick="demos.timeline.pauseTimeline()">暂停</button>
+            <button onclick="demos.timeline.restartTimeline()">重新开始</button>
+            <button onclick="demos.timeline.reverseTimeline()">反向</button>
+          </div>
+          <div class="demo-area">
+            <div id="tl-box1" class="box gradient-purple">TL-1</div>
+            <div id="tl-box2" class="box gradient-blue">TL-2</div>
+            <div id="tl-box3" class="box gradient-green">TL-3</div>
+          </div>
+        </div>
+
+        <div class="demo-card">
+          <h3>重叠动画（Overlap）</h3>
+          <div class="demo-controls">
+            <button onclick="demos.timeline.playOverlap()">播放重叠</button>
+            <button onclick="demos.timeline.reset()">重置</button>
+          </div>
+          <div class="demo-area">
+            <div id="tl-overlap1" class="box gradient-purple">A</div>
+            <div id="tl-overlap2" class="box gradient-blue">B</div>
+            <div id="tl-overlap3" class="box gradient-green">C</div>
+          </div>
+        </div>
+
+        <div class="demo-card">
+          <h3>标签控制</h3>
+          <div class="demo-controls">
+            <button onclick="demos.timeline.playLabels()">播放完整</button>
+            <button onclick="demos.timeline.seekToScene('scene1')">场景1</button>
+            <button onclick="demos.timeline.seekToScene('scene2')">场景2</button>
+            <button onclick="demos.timeline.seekToScene('scene3')">场景3</button>
+          </div>
+          <div class="demo-area">
+            <div id="tl-label1" class="box gradient-orange">场景动画</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 滚动动画 -->
+      <section class="section" id="scroll">
+        <h2>滚动触发动画</h2>
+
+        <div class="demo-card">
+          <h3>滚动预设动画</h3>
+          <p>向下滚动查看效果</p>
+          <div class="scroll-demo">
+            <div class="scroll-item" data-scroll="fade">淡入效果</div>
+            <div class="scroll-item" data-scroll="slide-up">从下滑入</div>
+            <div class="scroll-item" data-scroll="slide-left">从左滑入</div>
+            <div class="scroll-item" data-scroll="slide-right">从右滑入</div>
+            <div class="scroll-item" data-scroll="zoom">缩放进入</div>
+            <div class="scroll-item" data-scroll="rotate">旋转进入</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 物理动画 -->
+      <section class="section" id="physics">
+        <h2>物理动画</h2>
+
+        <div class="demo-card">
+          <h3>Spring 弹簧动画</h3>
+          <div class="demo-controls">
+            <button onclick="demos.physics.springGentle()">柔和</button>
+            <button onclick="demos.physics.springWobbly()">活泼</button>
+            <button onclick="demos.physics.springStiff()">僵硬</button>
+            <button onclick="demos.physics.springBouncy()">弹性</button>
+            <button onclick="demos.physics.reset('spring-box')">重置</button>
+          </div>
+          <div class="demo-area">
+            <div id="spring-box" class="box gradient-purple">Spring</div>
+          </div>
+        </div>
+
+        <div class="demo-card">
+          <h3>Inertia 惯性动画</h3>
+          <div class="demo-controls">
+            <button onclick="demos.physics.inertiaFast()">快速</button>
+            <button onclick="demos.physics.inertiaSlow()">慢速</button>
+            <button onclick="demos.physics.inertiaBounce()">带边界</button>
+            <button onclick="demos.physics.reset('inertia-box')">重置</button>
+          </div>
+          <div class="demo-area">
+            <div id="inertia-box" class="box gradient-blue">Inertia</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 手势动画 -->
+      <section class="section" id="gesture">
+        <h2>手势动画</h2>
+
+        <div class="demo-card">
+          <h3>拖拽 (Draggable)</h3>
+          <p>拖动下方的方块试试</p>
+          <div class="demo-area" style="height: 300px; position: relative; border: 2px dashed #ddd;">
+            <div id="drag-box" class="box gradient-purple" style="cursor: move;">拖我！</div>
+          </div>
+        </div>
+
+        <div class="demo-card">
+          <h3>手势识别</h3>
+          <p>点击、长按或滑动下方的方块</p>
+          <div class="demo-area">
+            <div id="gesture-box" class="box gradient-blue" style="cursor: pointer;">
+              手势识别
+              <div id="gesture-info" style="font-size: 12px; margin-top: 10px;"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 高级效果 -->
+      <section class="section" id="effects">
+        <h2>高级效果</h2>
+
+        <div class="demo-card">
+          <h3>视差滚动 (Parallax)</h3>
+          <div class="parallax-demo">
+            <div class="parallax-layer" id="parallax-bg">背景层</div>
+            <div class="parallax-layer" id="parallax-mid">中间层</div>
+            <div class="parallax-layer" id="parallax-front">前景层</div>
+          </div>
+        </div>
+
+        <div class="demo-card">
+          <h3>粒子系统</h3>
+          <div class="demo-controls">
+            <button onclick="demos.effects.emitParticles()">发射粒子</button>
+            <button onclick="demos.effects.emitExplosion()">爆炸效果</button>
+            <button onclick="demos.effects.clearParticles()">清除</button>
+          </div>
+          <canvas id="particle-canvas" width="600" height="300"
+            style="border: 1px solid #ddd; border-radius: 8px;"></canvas>
+        </div>
+
+        <div class="demo-card">
+          <h3>文字动画</h3>
+          <div class="demo-controls">
+            <button onclick="demos.effects.typewriter()">打字机</button>
+            <button onclick="demos.effects.animateChars()">逐字动画</button>
+            <button onclick="demos.effects.resetText()">重置</button>
+          </div>
+          <div id="text-demo" class="text-demo">
+            Hello, @ldesign/animation!
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="./main.js"></script>
+</body>
+
+</html>
+
+
+
+
+

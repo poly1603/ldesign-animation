@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>@ldesign/animation - 基础示例</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 40px;
+      background: #f5f5f5;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+    }
+
+    .demo-section {
+      background: white;
+      padding: 30px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      color: #666;
+      margin-bottom: 20px;
+      font-size: 18px;
+    }
+
+    .box {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      margin: 20px;
+      cursor: pointer;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background: #5568d3;
+    }
+
+    .flex {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>🎬 @ldesign/animation - 基础示例</h1>
+
+    <div class="demo-section">
+      <h2>基础动画 - to/from/fromTo</h2>
+      <button onclick="animateTo()">to() - 移动到右侧</button>
+      <button onclick="animateFrom()">from() - 从透明淡入</button>
+      <button onclick="animateFromTo()">fromTo() - 完整控制</button>
+      <div id="box1" class="box">Box 1</div>
+    </div>
+
+    <div class="demo-section">
+      <h2>CSS 预设动画</h2>
+      <button onclick="animateFadeIn()">fadeIn</button>
+      <button onclick="animateSlideInUp()">slideInUp</button>
+      <button onclick="animateZoomIn()">zoomIn</button>
+      <button onclick="animateBounceIn()">bounceIn</button>
+      <button onclick="animateRotateIn()">rotateIn</button>
+      <div id="box2" class="box">Box 2</div>
+    </div>
+
+    <div class="demo-section">
+      <h2>关键帧动画</h2>
+      <button onclick="animateKeyframes()">播放关键帧</button>
+      <div id="box3" class="box">Box 3</div>
+    </div>
+
+    <div class="demo-section">
+      <h2>Timeline 时间轴</h2>
+      <button onclick="playTimeline()">播放时间轴</button>
+      <button onclick="pauseTimeline()">暂停</button>
+      <button onclick="restartTimeline()">重新开始</button>
+      <div class="flex">
+        <div id="tl-box1" class="box">TL 1</div>
+        <div id="tl-box2" class="box">TL 2</div>
+        <div id="tl-box3" class="box">TL 3</div>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <h2>物理动画 - Spring</h2>
+      <button onclick="animateSpring()">弹簧动画</button>
+      <button onclick="animateWobbly()">活泼弹簧</button>
+      <button onclick="animateBouncy()">弹性弹簧</button>
+      <div id="box4" class="box">Box 4</div>
+    </div>
+  </div>
+
+  <script type="module">
+    import {
+      to,
+      from,
+      fromTo,
+      keyframes,
+      fadeIn,
+      slideInUp,
+      zoomIn,
+      bounceIn,
+      rotateIn,
+      createTimeline,
+      spring,
+      springPresets
+    } from '../src/index.ts'
+
+    // 基础动画
+    window.animateTo = () => {
+      to('#box1', { x: 200, rotate: 45 }, { duration: 600, easing: 'easeOutCubic' })
+    }
+
+    window.animateFrom = () => {
+      from('#box1', { opacity: 0, scale: 0 }, { duration: 600, easing: 'easeOutBack' })
+    }
+
+    window.animateFromTo = () => {
+      fromTo(
+        '#box1',
+        { x: -100, rotate: -180, scale: 0.5 },
+        { x: 100, rotate: 180, scale: 1.5 },
+        { duration: 1000, easing: 'easeInOutCubic' }
+      )
+    }
+
+    // CSS 预设
+    window.animateFadeIn = () => {
+      fadeIn('#box2', { duration: 600 })
+    }
+
+    window.animateSlideInUp = () => {
+      slideInUp('#box2', 100, { duration: 600 })
+    }
+
+    window.animateZoomIn = () => {
+      zoomIn('#box2', { duration: 600 })
+    }
+
+    window.animateBounceIn = () => {
+      bounceIn('#box2', { duration: 800 })
+    }
+
+    window.animateRotateIn = () => {
+      rotateIn('#box2', { duration: 600 })
+    }
+
+    // 关键帧
+    window.animateKeyframes = () => {
+      keyframes('#box3', [
+        { x: 0, y: 0, rotate: 0, scale: 1 },
+        { x: 100, y: -50, rotate: 90, scale: 1.2 },
+        { x: 200, y: 0, rotate: 180, scale: 1 },
+        { x: 100, y: 50, rotate: 270, scale: 0.8 },
+        { x: 0, y: 0, rotate: 360, scale: 1 }
+      ], { duration: 400 })
+    }
+
+    // Timeline
+    let timeline = null
+    window.playTimeline = () => {
+      if (!timeline) {
+        timeline = createTimeline()
+        timeline
+          .to('#tl-box1', { x: 200, rotate: 360 })
+          .to('#tl-box2', { y: -100, scale: 1.5 }, '-=0.3')
+          .to('#tl-box3', { x: 200, y: -100, rotate: -360 }, '-=0.5')
+      }
+      timeline.play()
+    }
+
+    window.pauseTimeline = () => {
+      timeline?.pause()
+    }
+
+    window.restartTimeline = () => {
+      timeline?.restart()
+    }
+
+    // 物理动画
+    window.animateSpring = () => {
+      spring(document.querySelector('#box4'), 'x', 200, springPresets.gentle)
+    }
+
+    window.animateWobbly = () => {
+      spring(document.querySelector('#box4'), 'x', 200, springPresets.wobbly)
+    }
+
+    window.animateBouncy = () => {
+      spring(document.querySelector('#box4'), 'x', 200, springPresets.bouncy)
+    }
+  </script>
+</body>
+
+</html>
+
+
+
+
+

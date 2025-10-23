@@ -1,14 +1,81 @@
 {
   "name": "@ldesign/animation",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "LDesign 动画库 - CSS/JS 动画、过渡效果、滚动动画、物理动画",
-  "keywords": ["ldesign", "animation", "transition", "gsap", "motion"],
+  "keywords": [
+    "ldesign",
+    "animation",
+    "transition",
+    "gsap",
+    "motion"
+  ],
   "author": "LDesign Team",
   "license": "MIT",
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./es/index.d.ts",
+      "import": "./es/index.js",
+      "require": "./lib/index.cjs"
+    },
+    "./core/*": {
+      "types": "./es/core/*.d.ts",
+      "import": "./es/core/*.js",
+      "require": "./lib/core/*.cjs"
+    },
+    "./effects/*": {
+      "types": "./es/effects/*.d.ts",
+      "import": "./es/effects/*.js",
+      "require": "./lib/effects/*.cjs"
+    },
+    "./gesture/*": {
+      "types": "./es/gesture/*.d.ts",
+      "import": "./es/gesture/*.js",
+      "require": "./lib/gesture/*.cjs"
+    },
+    "./physics/*": {
+      "types": "./es/physics/*.d.ts",
+      "import": "./es/physics/*.js",
+      "require": "./lib/physics/*.cjs"
+    },
+    "./scroll/*": {
+      "types": "./es/scroll/*.d.ts",
+      "import": "./es/scroll/*.js",
+      "require": "./lib/scroll/*.cjs"
+    },
+    "./svg/*": {
+      "types": "./es/svg/*.d.ts",
+      "import": "./es/svg/*.js",
+      "require": "./lib/svg/*.cjs"
+    },
+    "./timeline/*": {
+      "types": "./es/timeline/*.d.ts",
+      "import": "./es/timeline/*.js",
+      "require": "./lib/timeline/*.cjs"
+    },
+    "./transition/*": {
+      "types": "./es/transition/*.d.ts",
+      "import": "./es/transition/*.js",
+      "require": "./lib/transition/*.cjs"
+    },
+    "./utils/*": {
+      "types": "./es/utils/*.d.ts",
+      "import": "./es/utils/*.js",
+      "require": "./lib/utils/*.cjs"
+    }
+  },
   "main": "./lib/index.cjs",
   "module": "./es/index.js",
   "types": "./es/index.d.ts",
+  "unpkg": "./dist/index.min.js",
+  "jsdelivr": "./dist/index.min.js",
+  "files": [
+    "README.md",
+    "LICENSE",
+    "package.json",
+    "es",
+    "lib"
+  ],
   "scripts": {
     "build": "ldesign-builder build -f esm,cjs,dts",
     "dev": "ldesign-builder watch",
@@ -17,19 +84,22 @@
   "dependencies": {
     "@ldesign/shared": "workspace:*"
   },
+  "peerDependencies": {
+    "vue": "^3.3.0",
+    "react": "^18.0.0"
+  },
   "devDependencies": {
     "@ldesign/builder": "workspace:*",
     "@antfu/eslint-config": "^6.0.0",
     "eslint": "^9.18.0",
     "typescript": "^5.7.3"
   },
-  "peerDependencies": {
-    "vue": "^3.3.0",
-    "react": "^18.0.0"
-  },
   "peerDependenciesMeta": {
-    "vue": { "optional": true },
-    "react": { "optional": true }
+    "vue": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
   }
 }
-

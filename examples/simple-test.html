@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>@ldesign/animation - 简单测试</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 40px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+    }
+
+    .demo-section {
+      margin-bottom: 40px;
+      padding: 30px;
+      background: #f9f9f9;
+      border-radius: 12px;
+    }
+
+    h2 {
+      color: #666;
+      margin-bottom: 20px;
+      font-size: 20px;
+    }
+
+    .box {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    button {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 5px;
+      font-weight: 600;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .status {
+      padding: 15px;
+      background: #e8f5e9;
+      border-left: 4px solid #4caf50;
+      margin-bottom: 20px;
+      border-radius: 4px;
+    }
+
+    .error {
+      background: #ffebee;
+      border-left-color: #f44336;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>🎬 @ldesign/animation 功能测试</h1>
+
+    <div id="status" class="status">
+      ⏳ 正在加载模块...
+    </div>
+
+    <div class="demo-section">
+      <h2>基础动画 - to/from/fromTo</h2>
+      <button onclick="testTo()">测试 to() - 移动+旋转</button>
+      <button onclick="testFrom()">测试 from() - 淡入</button>
+      <button onclick="testFromTo()">测试 fromTo() - 完整路径</button>
+      <button onclick="resetBox('box1')">重置</button>
+      <div id="box1" class="box">Box 1</div>
+    </div>
+
+    <div class="demo-section">
+      <h2>CSS 预设动画</h2>
+      <button onclick="testFadeIn()">fadeIn</button>
+      <button onclick="testSlideInUp()">slideInUp</button>
+      <button onclick="testZoomIn()">zoomIn</button>
+      <button onclick="testBounceIn()">bounceIn</button>
+      <button onclick="testRotateIn()">rotateIn</button>
+      <button onclick="resetBox('box2')">重置</button>
+      <div id="box2" class="box">Box 2</div>
+    </div>
+
+    <div class="demo-section">
+      <h2>关键帧动画</h2>
+      <button onclick="testKeyframes()">播放关键帧</button>
+      <button onclick="testCircle()">圆形路径</button>
+      <button onclick="resetBox('box3')">重置</button>
+      <div id="box3" class="box">Box 3</div>
+    </div>
+
+    <div class="demo-section">
+      <h2>Timeline 时间轴</h2>
+      <button onclick="testTimeline()">播放 Timeline</button>
+      <button onclick="pauseTimeline()">暂停</button>
+      <button onclick="restartTimeline()">重新开始</button>
+      <div style="display: flex;">
+        <div id="tl1" class="box">TL 1</div>
+        <div id="tl2" class="box">TL 2</div>
+        <div id="tl3" class="box">TL 3</div>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <h2>物理动画 - Spring</h2>
+      <button onclick="testSpring()">弹簧动画（bouncy）</button>
+      <button onclick="testWobbly()">活泼弹簧（wobbly）</button>
+      <button onclick="resetBox('box4')">重置</button>
+      <div id="box4" class="box">Box 4</div>
+    </div>
+  </div>
+
+  <script type="module">
+    // 使用相对路径直接引入源码
+    import {
+      to,
+      from,
+      fromTo,
+      keyframes,
+      fadeIn,
+      slideInUp,
+      zoomIn,
+      bounceIn,
+      rotateIn,
+      createTimeline,
+      spring,
+      springPresets
+    } from '../../src/index.ts'
+
+    // 更新状态
+    const statusDiv = document.getElementById('status')
+    statusDiv.innerHTML = '✅ 模块加载成功！所有功能可用。'
+    statusDiv.classList.remove('error')
+
+    console.log('✅ @ldesign/animation 加载成功！')
+    console.log('可用的 API:', { to, from, fromTo, keyframes, fadeIn, spring })
+
+    // Timeline 实例
+    let timeline = null
+
+    // 测试函数
+    window.testTo = () => {
+      console.log('执行 to() 动画')
+      to('#box1', { x: 200, rotate: 360 }, {
+        duration: 1000,
+        easing: 'easeOutCubic',
+        onComplete: () => console.log('to() 完成')
+      })
+    }
+
+    window.testFrom = () => {
+      console.log('执行 from() 动画')
+      from('#box1', { opacity: 0, scale: 0 }, {
+        duration: 800,
+        easing: 'easeOutBack',
+        onComplete: () => console.log('from() 完成')
+      })
+    }
+
+    window.testFromTo = () => {
+      console.log('执行 fromTo() 动画')
+      fromTo(
+        '#box1',
+        { x: -100, rotate: -180 },
+        { x: 200, rotate: 180 },
+        {
+          duration: 1500,
+          easing: 'easeInOutCubic',
+          onComplete: () => console.log('fromTo() 完成')
+        }
+      )
+    }
+
+    window.testFadeIn = () => {
+      console.log('执行 fadeIn() 动画')
+      fadeIn('#box2', { duration: 600 })
+    }
+
+    window.testSlideInUp = () => {
+      console.log('执行 slideInUp() 动画')
+      slideInUp('#box2', 100, { duration: 600 })
+    }
+
+    window.testZoomIn = () => {
+      console.log('执行 zoomIn() 动画')
+      zoomIn('#box2', { duration: 600 })
+    }
+
+    window.testBounceIn = () => {
+      console.log('执行 bounceIn() 动画')
+      bounceIn('#box2', { duration: 800 })
+    }
+
+    window.testRotateIn = () => {
+      console.log('执行 rotateIn() 动画')
+      rotateIn('#box2', { duration: 600 })
+    }
+
+    window.testKeyframes = () => {
+      console.log('执行 keyframes() 动画')
+      keyframes('#box3', [
+        { x: 0, y: 0, rotate: 0, scale: 1 },
+        { x: 100, y: -50, rotate: 90, scale: 1.2 },
+        { x: 200, y: 0, rotate: 180, scale: 1 },
+        { x: 100, y: 50, rotate: 270, scale: 0.8 },
+        { x: 0, y: 0, rotate: 360, scale: 1 }
+      ], {
+        duration: 400,
+        onComplete: () => console.log('keyframes() 完成')
+      })
+    }
+
+    window.testCircle = () => {
+      console.log('执行圆形路径动画')
+      const radius = 80
+      const frames = []
+      for (let i = 0; i <= 360; i += 30) {
+        const angle = (i * Math.PI) / 180
+        frames.push({
+          x: Math.cos(angle) * radius,
+          y: Math.sin(angle) * radius,
+          rotate: i
+        })
+      }
+      keyframes('#box3', frames, {
+        duration: 300,
+        easing: 'linear',
+        onComplete: () => console.log('圆形路径完成')
+      })
+    }
+
+    window.testTimeline = () => {
+      console.log('执行 Timeline 动画')
+      if (!timeline) {
+        timeline = createTimeline({
+          onComplete: () => console.log('Timeline 完成！')
+        })
+        timeline
+          .to('#tl1', { x: 150, rotate: 360 }, { duration: 800 })
+          .to('#tl2', { y: -80, scale: 1.5 }, { duration: 600, easing: 'easeOutBack' })
+          .to('#tl3', { x: 150, rotate: -360 }, { duration: 800 }, '-=0.4')
+      }
+      timeline.play()
+    }
+
+    window.pauseTimeline = () => {
+      console.log('暂停 Timeline')
+      timeline?.pause()
+    }
+
+    window.restartTimeline = () => {
+      console.log('重新开始 Timeline')
+      timeline?.restart()
+    }
+
+    window.testSpring = () => {
+      console.log('执行 Spring 动画（bouncy）')
+      const box = document.querySelector('#box4')
+      spring(box, 'x', 200, springPresets.bouncy)
+    }
+
+    window.testWobbly = () => {
+      console.log('执行 Spring 动画（wobbly）')
+      const box = document.querySelector('#box4')
+      spring(box, 'x', 200, springPresets.wobbly)
+    }
+
+    window.resetBox = (id) => {
+      console.log(`重置 ${id}`)
+      to(`#${id}`, {
+        x: 0,
+        y: 0,
+        scale: 1,
+        rotate: 0,
+        opacity: 1
+      }, {
+        duration: 500,
+        easing: 'easeOutCubic'
+      })
+    }
+  </script>
+</body>
+
+</html>
+
+
+
+

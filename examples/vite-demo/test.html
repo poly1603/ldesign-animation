@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animation Test</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 40px;
+      background: #f5f5f5;
+    }
+
+    .box {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 8px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>@ldesign/animation 测试页面</h1>
+  <button onclick="test1()">测试 to()</button>
+  <button onclick="test2()">测试 fadeIn()</button>
+  <button onclick="test3()">测试 spring()</button>
+  <div id="box" class="box">Test Box</div>
+
+  <script type="module">
+    import { to, fadeIn, spring, springPresets } from '../../src/index.ts'
+
+    window.test1 = () => {
+      console.log('测试 to() 动画')
+      to('#box', { x: 200, rotate: 360 }, { duration: 1000, easing: 'easeOutCubic' })
+    }
+
+    window.test2 = () => {
+      console.log('测试 fadeIn() 动画')
+      fadeIn('#box')
+    }
+
+    window.test3 = () => {
+      console.log('测试 spring() 动画')
+      const box = document.querySelector('#box')
+      spring(box, 'x', 200, springPresets.bouncy)
+    }
+
+    console.log('✅ @ldesign/animation 加载成功！')
+  </script>
+</body>
+
+</html>
+
+
+
+
