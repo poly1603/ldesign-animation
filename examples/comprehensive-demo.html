@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>@ldesign/animation - 完整示例</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 3em;
+    }
+
+    .section {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .section h2 {
+      color: #667eea;
+      margin-bottom: 20px;
+      font-size: 1.8em;
+    }
+
+    .demo-area {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .box {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      background: #667eea;
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    button:hover {
+      background: #5568d3;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .draggable-area {
+      position: relative;
+      height: 300px;
+      background: #f5f5f5;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .draggable-box {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      cursor: grab;
+    }
+
+    .draggable-box:active {
+      cursor: grabbing;
+    }
+
+    .scroll-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .scroll-box {
+      width: 200px;
+      height: 200px;
+      background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5em;
+      font-weight: bold;
+      opacity: 0;
+      transform: translateY(50px);
+    }
+
+    .timeline-demo {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .timeline-box {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    .performance-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: #f5f5f5;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 2em;
+      font-weight: bold;
+      color: #667eea;
+      margin-bottom: 10px;
+    }
+
+    .stat-label {
+      color: #666;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>@ldesign/animation 完整示例</h1>
+
+    <!-- 基础动画 -->
+    <div class="section">
+      <h2>1. 基础动画</h2>
+      <div class="demo-area">
+        <div class="box basic-box">Box</div>
+      </div>
+      <div class="controls">
+        <button onclick="basicAnimations.fadeIn()">淡入</button>
+        <button onclick="basicAnimations.slideIn()">滑入</button>
+        <button onclick="basicAnimations.zoomIn()">放大</button>
+        <button onclick="basicAnimations.rotate()">旋转</button>
+        <button onclick="basicAnimations.bounce()">弹跳</button>
+      </div>
+    </div>
+
+    <!-- Timeline 时间轴 -->
+    <div class="section">
+      <h2>2. Timeline 时间轴</h2>
+      <div class="timeline-demo">
+        <div class="timeline-box" id="tl-box-1">1</div>
+        <div class="timeline-box" id="tl-box-2">2</div>
+        <div class="timeline-box" id="tl-box-3">3</div>
+        <div class="timeline-box" id="tl-box-4">4</div>
+      </div>
+      <div class="controls">
+        <button onclick="timelineDemo.play()">播放</button>
+        <button onclick="timelineDemo.pause()">暂停</button>
+        <button onclick="timelineDemo.restart()">重新开始</button>
+        <button onclick="timelineDemo.reverse()">反向</button>
+      </div>
+    </div>
+
+    <!-- 拖拽 -->
+    <div class="section">
+      <h2>3. 拖拽交互</h2>
+      <div class="draggable-area">
+        <div class="draggable-box" id="drag-box-1">拖我</div>
+        <div class="draggable-box" id="drag-box-2" style="left: 100px;">拖我</div>
+        <div class="draggable-box" id="drag-box-3" style="left: 200px;">拖我</div>
+      </div>
+    </div>
+
+    <!-- 物理动画 -->
+    <div class="section">
+      <h2>4. 物理动画</h2>
+      <div class="demo-area">
+        <div class="box physics-box">Physics</div>
+      </div>
+      <div class="controls">
+        <button onclick="physicsDemo.springGentle()">弹簧 (柔和)</button>
+        <button onclick="physicsDemo.springBouncy()">弹簧 (弹性)</button>
+        <button onclick="physicsDemo.inertia()">惯性</button>
+      </div>
+    </div>
+
+    <!-- 特殊效果 -->
+    <div class="section">
+      <h2>5. 特殊效果</h2>
+      <div class="demo-area">
+        <div class="box special-box">Special</div>
+      </div>
+      <div class="controls">
+        <button onclick="specialEffects.heartbeat()">心跳</button>
+        <button onclick="specialEffects.shake()">摇晃</button>
+        <button onclick="specialEffects.pulse()">脉冲</button>
+        <button onclick="specialEffects.wobble()">晃动</button>
+        <button onclick="specialEffects.flash()">闪烁</button>
+        <button onclick="specialEffects.swing()">摆动</button>
+      </div>
+    </div>
+
+    <!-- 性能监控 -->
+    <div class="section">
+      <h2>6. 性能监控</h2>
+      <div class="performance-stats">
+        <div class="stat-card">
+          <div class="stat-value" id="fps-value">60</div>
+          <div class="stat-label">FPS</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="frame-time-value">16</div>
+          <div class="stat-label">帧时间 (ms)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="animations-value">0</div>
+          <div class="stat-label">活动动画</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="memory-value">0</div>
+          <div class="stat-label">内存 (MB)</div>
+        </div>
+      </div>
+      <div class="controls">
+        <button onclick="performanceDemo.startMonitor()">开始监控</button>
+        <button onclick="performanceDemo.stopMonitor()">停止监控</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 滚动动画 -->
+  <div class="scroll-section">
+    <div class="scroll-box">滚动到这里</div>
+  </div>
+
+  <script type="module">
+    import {
+      to,
+      from,
+      fadeIn,
+      slideInUp,
+      zoomIn,
+      bounceIn,
+      heartbeat,
+      shake,
+      pulse,
+      wobble,
+      flash,
+      swing,
+      createTimeline,
+      draggable,
+      spring,
+      springPresets,
+      inertia,
+      scrollFadeIn,
+      scrollSlideInUp,
+      engine,
+      memoryMonitor,
+      PerformanceMonitor
+    } from '../es/index.js'
+
+    // 基础动画
+    window.basicAnimations = {
+      fadeIn: () => fadeIn('.basic-box'),
+      slideIn: () => slideInUp('.basic-box'),
+      zoomIn: () => zoomIn('.basic-box'),
+      rotate: () => to('.basic-box', { rotate: 360 }, { duration: 1000 }),
+      bounce: () => bounceIn('.basic-box')
+    }
+
+    // Timeline 演示
+    const timeline = createTimeline({ paused: true })
+    timeline
+      .to('#tl-box-1', { x: 100, rotate: 360 })
+      .to('#tl-box-2', { y: -50, scale: 1.5 }, '-=0.5')
+      .to('#tl-box-3', { x: -100, rotate: -360 }, '-=0.5')
+      .to('#tl-box-4', { y: 50, scale: 0.5 }, '-=0.5')
+
+    window.timelineDemo = {
+      play: () => timeline.play(),
+      pause: () => timeline.pause(),
+      restart: () => timeline.restart(),
+      reverse: () => timeline.reverse()
+    }
+
+    // 拖拽演示
+    draggable('#drag-box-1', {
+      bounds: '.draggable-area',
+      inertia: true
+    })
+
+    draggable('#drag-box-2', {
+      bounds: '.draggable-area',
+      axis: 'x'
+    })
+
+    draggable('#drag-box-3', {
+      bounds: '.draggable-area',
+      axis: 'y'
+    })
+
+    // 物理动画
+    window.physicsDemo = {
+      springGentle: () => {
+        spring('.physics-box', 'x', 200, springPresets.gentle)
+        setTimeout(() => spring('.physics-box', 'x', 0, springPresets.gentle), 1000)
+      },
+      springBouncy: () => {
+        spring('.physics-box', 'x', 200, springPresets.bouncy)
+        setTimeout(() => spring('.physics-box', 'x', 0, springPresets.bouncy), 1000)
+      },
+      inertia: () => {
+        inertia('.physics-box', 'x', {
+          velocity: 1000,
+          friction: 0.9,
+          min: 0,
+          max: 300
+        })
+      }
+    }
+
+    // 特殊效果
+    window.specialEffects = {
+      heartbeat: () => heartbeat('.special-box'),
+      shake: () => shake('.special-box'),
+      pulse: () => pulse('.special-box'),
+      wobble: () => wobble('.special-box'),
+      flash: () => flash('.special-box'),
+      swing: () => swing('.special-box')
+    }
+
+    // 滚动动画
+    scrollSlideInUp('.scroll-box')
+
+    // 性能监控
+    let monitor = null
+
+    window.performanceDemo = {
+      startMonitor: () => {
+        if (monitor) return
+
+        monitor = new PerformanceMonitor((stats) => {
+          document.getElementById('fps-value').textContent = Math.round(stats.fps)
+          document.getElementById('frame-time-value').textContent = stats.frameTime.toFixed(1)
+          document.getElementById('animations-value').textContent = stats.activeAnimations
+        })
+
+        monitor.start()
+
+        memoryMonitor.start()
+
+        setInterval(() => {
+          const stats = memoryMonitor.getStats()
+          document.getElementById('memory-value').textContent = stats.usedMemory.toFixed(1)
+        }, 1000)
+      },
+
+      stopMonitor: () => {
+        if (monitor) {
+          monitor.stop()
+          monitor = null
+        }
+        memoryMonitor.stop()
+      }
+    }
+
+    // 自动开始监控
+    window.performanceDemo.startMonitor()
+  </script>
+</body>
+
+</html>
