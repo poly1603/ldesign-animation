@@ -1,5 +1,26 @@
 /**
  * Animation 核心类 - 提供统一的动画 API
+ * 
+ * @description
+ * Animation 类是动画系统的核心，提供了简洁的链式 API 来创建和控制动画。
+ * 支持多种动画模式：to（到目标值）、from（从起始值）、fromTo（从起点到终点）、keyframes（关键帧）。
+ * 
+ * @example
+ * ```typescript
+ * // 创建动画实例
+ * const anim = new Animation(element)
+ * anim.to({ x: 100, opacity: 0.5 }, { duration: 1000 })
+ * 
+ * // 链式调用
+ * anim.to({ x: 100 }).to({ y: 100 })
+ * ```
+ * 
+ * @performance
+ * - 使用 GPU 加速的 transform 和 opacity 属性
+ * - 自动管理 will-change 优化
+ * - 共享全局 RAF 循环，减少开销
+ * 
+ * @public
  */
 
 import type {
@@ -12,22 +33,60 @@ import type {
 import { Tween } from './tween'
 import { engine } from './engine'
 import { getProperty } from './property'
+import { ErrorHandler, TargetNotFoundError } from './errors'
 
 /**
- * Animation 类
+ * Animation 类 - 动画实例
+ * 
+ * @class
  */
 export class Animation {
   private target: AnimationTarget
   private tween: Tween | null = null
 
+  /**
+   * 创建动画实例
+   * 
+   * @param target - 目标 DOM 元素（HTMLElement 或 SVGElement）
+   * 
+   * @example
+   * ```typescript
+   * const element = document.querySelector('.box')
+   * const animation = new Animation(element)
+   * ```
+   */
   constructor(target: AnimationTarget) {
     this.target = target
   }
 
   /**
    * 动画到目标值（从当前值到目标值）
-   * @param props - 目标属性
-   * @param options - 动画选项
+   * 
+   * @param props - 目标属性对象，支持 CSS 属性和 transform 简写
+   * @param options - 动画选项配置
+   * 
+   * @returns 返回 this 以支持链式调用
+   * 
+   * @example
+   * ```typescript
+   * // 基础用法
+   * animation.to({ x: 100, opacity: 0.5 }, { duration: 1000 })
+   * 
+   * // 链式调用
+   * animation
+   *   .to({ x: 100 }, { duration: 500 })
+   *   .to({ y: 100 }, { duration: 500, delay: 500 })
+   * 
+   * // 使用缓动函数
+   * animation.to({ x: 100 }, { 
+   *   duration: 1000,
+   *   easing: 'easeOutElastic',
+   *   onComplete: () => console.log('Done')
+   * })
+   * ```
+   * 
+   * @performance
+   * 优先使用 x, y, scale, rotate, opacity 等 GPU 加速属性
    */
   to(props: AnimationProps, options?: AnimationOptions): this {
     return this.animate(props, options)
@@ -35,8 +94,23 @@ export class Animation {
 
   /**
    * 从起始值动画（从起始值到当前值）
-   * @param props - 起始属性
-   * @param options - 动画选项
+   * 
+   * @param props - 起始属性对象
+   * @param options - 动画选项配置
+   * 
+   * @returns 返回 this 以支持链式调用
+   * 
+   * @example
+   * ```typescript
+   * // 淡入效果
+   * animation.from({ opacity: 0 }, { duration: 500 })
+   * 
+   * // 从左滑入
+   * animation.from({ x: -100, opacity: 0 }, { duration: 800 })
+   * ```
+   * 
+   * @description
+   * 元素会先立即设置为起始状态，然后动画到当前状态
    */
   from(props: AnimationProps, options?: AnimationOptions): this {
     // 先设置起始值，然后动画到当前值
@@ -183,10 +257,11 @@ export function to(
   options?: AnimationOptions
 ): Animation {
   const element = typeof target === 'string' ? document.querySelector(target) : target
-  if (!element) {
-    throw new Error(`Target element not found: ${target}`)
-  }
-  return new Animation(element as AnimationTarget).to(props, options)
+  const selector = typeof target === 'string' ? target : 'element'
+
+  ErrorHandler.validateTarget(element, selector)
+
+  return new Animation(element).to(props, options)
 }
 
 /**
@@ -201,10 +276,11 @@ export function from(
   options?: AnimationOptions
 ): Animation {
   const element = typeof target === 'string' ? document.querySelector(target) : target
-  if (!element) {
-    throw new Error(`Target element not found: ${target}`)
-  }
-  return new Animation(element as AnimationTarget).from(props, options)
+  const selector = typeof target === 'string' ? target : 'element'
+
+  ErrorHandler.validateTarget(element, selector)
+
+  return new Animation(element).from(props, options)
 }
 
 /**
@@ -221,10 +297,11 @@ export function fromTo(
   options?: AnimationOptions
 ): Animation {
   const element = typeof target === 'string' ? document.querySelector(target) : target
-  if (!element) {
-    throw new Error(`Target element not found: ${target}`)
-  }
-  return new Animation(element as AnimationTarget).fromTo(fromProps, toProps, options)
+  const selector = typeof target === 'string' ? target : 'element'
+
+  ErrorHandler.validateTarget(element, selector)
+
+  return new Animation(element).fromTo(fromProps, toProps, options)
 }
 
 /**
@@ -239,10 +316,11 @@ export function keyframes(
   options?: AnimationOptions
 ): Animation {
   const element = typeof target === 'string' ? document.querySelector(target) : target
-  if (!element) {
-    throw new Error(`Target element not found: ${target}`)
-  }
-  return new Animation(element as AnimationTarget).keyframes(frames, options)
+  const selector = typeof target === 'string' ? target : 'element'
+
+  ErrorHandler.validateTarget(element, selector)
+
+  return new Animation(element).keyframes(frames, options)
 }
 
 /**
@@ -255,11 +333,11 @@ export function animate(
   config: AnimationConfig
 ): Animation {
   const element = typeof target === 'string' ? document.querySelector(target) : target
-  if (!element) {
-    throw new Error(`Target element not found: ${target}`)
-  }
+  const selector = typeof target === 'string' ? target : 'element'
 
-  const animation = new Animation(element as AnimationTarget)
+  ErrorHandler.validateTarget(element, selector)
+
+  const animation = new Animation(element)
 
   if (config.keyframes) {
     return animation.keyframes(config.keyframes, config)

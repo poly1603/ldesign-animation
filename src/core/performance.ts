@@ -98,8 +98,8 @@ export class PerformanceMonitor {
    */
   private getMemoryUsage(): number | undefined {
     if ('memory' in performance) {
-      const memory = (performance as any).memory
-      return memory.usedJSHeapSize / 1048576 // 转换为 MB
+      const memory = (performance as Performance & { memory?: { usedJSHeapSize: number } }).memory
+      return memory ? memory.usedJSHeapSize / 1048576 : undefined // 转换为 MB
     }
     return undefined
   }

@@ -15,7 +15,7 @@ export class Timeline {
   private labels: LabelManager = new LabelManager()
   private currentTime: number = 0
   private totalDuration: number = 0
-  private state: TimelineState = 'idle' as any
+  private state: TimelineState = 'idle'
   private startTime: number = 0
   private pauseTime: number = 0
   private _timeScale: number = 1
@@ -227,9 +227,9 @@ export class Timeline {
    * 播放时间轴
    */
   play(): this {
-    if (this.state === 'playing' as any) return this
+    if (this.state === 'playing') return this
 
-    if (this.state === 'paused' as any) {
+    if (this.state === 'paused') {
       // 从暂停恢复
       const pauseDuration = performance.now() - this.pauseTime
       this.startTime += pauseDuration
@@ -240,7 +240,7 @@ export class Timeline {
       this.onStart?.()
     }
 
-    this.state = 'playing' as any
+    this.state = 'playing'
     this.tick()
     return this
   }
@@ -249,9 +249,9 @@ export class Timeline {
    * 暂停时间轴
    */
   pause(): this {
-    if (this.state !== 'playing' as any) return this
+    if (this.state !== 'playing') return this
 
-    this.state = 'paused' as any
+    this.state = 'paused'
     this.pauseTime = performance.now()
 
     if (this.rafId !== null) {
@@ -278,7 +278,7 @@ export class Timeline {
    * 停止时间轴
    */
   stop(): this {
-    this.state = 'idle' as any
+    this.state = 'idle'
     this.currentTime = 0
 
     if (this.rafId !== null) {
@@ -294,11 +294,29 @@ export class Timeline {
   }
 
   /**
-   * 反向播放
+   * 反向播放（从当前位置反向）
    */
   reverse(): this {
-    // TODO: 实现反向播放
-    console.warn('Timeline.reverse() not implemented yet')
+    if (this.state === 'idle') {
+      // 如果处于空闲状态，从结尾开始反向播放
+      this.currentTime = this.totalDuration
+    }
+
+    // 反转时间缩放以实现反向播放
+    this._timeScale = -Math.abs(this._timeScale)
+
+    if (this.state !== 'playing') {
+      this.play()
+    }
+
+    return this
+  }
+
+  /**
+   * 正向播放
+   */
+  forward(): this {
+    this._timeScale = Math.abs(this._timeScale)
     return this
   }
 
@@ -350,8 +368,8 @@ export class Timeline {
   /**
    * RAF 循环
    */
-  private tick = () => {
-    if (this.state !== 'playing' as any) return
+  private tick = (): void => {
+    if (this.state !== 'playing') return
 
     const elapsed = (performance.now() - this.startTime) * this._timeScale
     this.currentTime = elapsed
@@ -364,7 +382,7 @@ export class Timeline {
 
     // 检查是否完成
     if (this.currentTime >= this.totalDuration) {
-      this.state = 'finished' as any
+      this.state = 'finished'
       this.onComplete?.()
       return
     }

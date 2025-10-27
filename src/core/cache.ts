@@ -101,47 +101,99 @@ export class ComputeCache {
 export const computeCache = new ComputeCache()
 
 /**
- * Transform 缓存
- * 缓存元素的 transform 值，避免重复解析
+ * Transform 缓存配置
  */
-const transformCache = new Map<Element, { transform: any; timestamp: number }>()
-const TRANSFORM_CACHE_TTL = 1000 // 1秒过期
-
-/**
- * 获取缓存的 transform
- */
-export function getCachedTransform(element: Element): any | null {
-  const cached = transformCache.get(element)
-  if (cached && Date.now() - cached.timestamp < TRANSFORM_CACHE_TTL) {
-    return cached.transform
-  }
-  return null
+interface TransformCacheConfig {
+  ttl: number
+  maxSize: number
 }
 
 /**
- * 设置 transform 缓存
+ * Transform 缓存（优化版 - 使用 WeakMap 避免内存泄漏）
  */
-export function setCachedTransform(element: Element, transform: any): void {
-  transformCache.set(element, {
-    transform,
-    timestamp: Date.now(),
-  })
-}
+class TransformCache {
+  // 使用 WeakMap 自动清理不再引用的元素
+  private cache: WeakMap<Element, { transform: any; timestamp: number }> = new WeakMap()
+  private config: TransformCacheConfig
+  private cleanupScheduled: boolean = false
 
-/**
- * 清理过期的 transform 缓存
- */
-export function cleanTransformCache(): void {
-  const now = Date.now()
-  for (const [element, cached] of transformCache.entries()) {
-    if (now - cached.timestamp >= TRANSFORM_CACHE_TTL) {
-      transformCache.delete(element)
+  constructor(config: Partial<TransformCacheConfig> = {}) {
+    this.config = {
+      ttl: config.ttl ?? 1000, // 默认1秒过期
+      maxSize: config.maxSize ?? 200,
     }
   }
+
+  /**
+   * 获取缓存的 transform
+   */
+  get(element: Element): any | null {
+    const cached = this.cache.get(element)
+    if (cached && Date.now() - cached.timestamp < this.config.ttl) {
+      return cached.transform
+    }
+    return null
+  }
+
+  /**
+   * 设置 transform 缓存
+   */
+  set(element: Element, transform: any): void {
+    this.cache.set(element, {
+      transform,
+      timestamp: Date.now(),
+    })
+
+    // 使用 RAF 调度清理，而不是 setInterval
+    this.scheduleCleanup()
+  }
+
+  /**
+   * 调度清理（使用 RAF，避免阻塞）
+   */
+  private scheduleCleanup(): void {
+    if (this.cleanupScheduled) return
+
+    this.cleanupScheduled = true
+    requestIdleCallback(() => {
+      // WeakMap 会自动清理，这里只需要重置标志
+      this.cleanupScheduled = false
+    }, { timeout: 5000 })
+  }
+
+  /**
+   * 清空缓存
+   */
+  clear(): void {
+    this.cache = new WeakMap()
+  }
 }
 
-// 定期清理缓存
-setInterval(cleanTransformCache, 5000)
+/**
+ * 全局 transform 缓存实例
+ */
+const transformCache = new TransformCache()
+
+/**
+ * 获取缓存的 transform（向后兼容）
+ */
+export function getCachedTransform(element: Element): any | null {
+  return transformCache.get(element)
+}
+
+/**
+ * 设置 transform 缓存（向后兼容）
+ */
+export function setCachedTransform(element: Element, transform: any): void {
+  transformCache.set(element, transform)
+}
+
+/**
+ * 清理过期的 transform 缓存（向后兼容，但现在由 WeakMap 自动管理）
+ */
+export function cleanTransformCache(): void {
+  // WeakMap 自动清理，无需手动操作
+}
 
 
 

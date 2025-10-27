@@ -86,6 +86,37 @@ export { ObjectPool, createObjectPool } from './core/object-pool'
 export { WillChangeManager, willChangeManager, withWillChange } from './core/will-change'
 export { visibilityManager } from './core/visibility'
 
+// ============ 内存与性能监控 ============
+export { MemoryMonitor, memoryMonitor, type MemoryStats, type MemoryMonitorConfig } from './core/memory-monitor'
+export { PerformanceAdaptive, performanceAdaptive, PerformanceTier, type DeviceInfo, type PerformanceConfig } from './core/adaptive'
+
+// ============ 错误处理 ============
+export {
+  AnimationError,
+  TargetNotFoundError,
+  InvalidPropertyError,
+  InvalidConfigError,
+  PerformanceWarning,
+  MemoryError,
+  TimelineError,
+  ErrorHandler,
+  devAssert,
+  devWarn,
+} from './core/errors'
+
+// ============ 高级功能 ============
+export {
+  AnimationSequence,
+  createSequence,
+  sequence,
+  parallel,
+  stagger,
+  AnimationDebugger,
+  createDebugger,
+  debugger,
+  type DebuggerConfig,
+} from './advanced'
+
 
 
 

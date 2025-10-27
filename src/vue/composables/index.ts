@@ -10,4 +10,5 @@ export { useDraggable } from './useDraggable'
 export { useGesture } from './useGesture'
 export { useParallax } from './useParallax'
 export { useInView } from './useInView'
+export { usePerformance, usePerformanceConfig, useFPS, useMemory } from './usePerformance'
 

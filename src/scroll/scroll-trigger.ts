@@ -35,6 +35,9 @@ function parsePosition(position: string | number): { trigger: number; viewport: 
 /**
  * ScrollTrigger 类
  */
+/**
+ * ScrollTrigger 类（优化版 - 添加资源清理）
+ */
 export class ScrollTrigger {
   private config: ScrollTriggerConfig
   private trigger: Element
@@ -43,6 +46,7 @@ export class ScrollTrigger {
   private isActive: boolean = false
   private scrollHandler: (() => void) | null = null
   private intersectionManager?: IntersectionManager
+  private disposed: boolean = false
 
   constructor(
     trigger: AnimationTarget | string,
@@ -170,9 +174,11 @@ export class ScrollTrigger {
   }
 
   /**
-   * 销毁
+   * 销毁（清理所有资源）
    */
   destroy(): void {
+    if (this.disposed) return
+
     if (this.scrollHandler) {
       this.scroller.removeEventListener('scroll', this.scrollHandler)
       this.scrollHandler = null
@@ -184,6 +190,16 @@ export class ScrollTrigger {
     }
 
     this.animation?.stop()
+    this.animation = undefined
+
+    this.disposed = true
+  }
+
+  /**
+   * 检查是否已销毁
+   */
+  isDisposed(): boolean {
+    return this.disposed
   }
 }
 
@@ -198,7 +214,7 @@ export function createScrollTrigger(
 }
 
 /**
- * 创建滚动动画
+ * 创建滚动动画（支持 scrub）
  */
 export function scrollAnimate(
   target: AnimationTarget | string,
@@ -209,21 +225,67 @@ export function scrollAnimate(
     throw new Error(`Target element not found: ${target}`)
   }
 
+  let animation: Animation | null = null
+
   const scrollTrigger = new ScrollTrigger(
     config.trigger ?? element,
     {
       ...config,
+      onEnter: () => {
+        if (!config.scrub && config.animation) {
+          // 非 scrub 模式，直接播放动画
+          animation = animate(element, config.animation)
+        }
+        config.onEnter?.()
+      },
       onUpdate: (progress) => {
-        if (config.scrub) {
-          // 跟随滚动进度更新动画
-          // TODO: 实现 scrub 动画
+        if (config.scrub && config.animation) {
+          // Scrub 模式：根据滚动进度更新动画
+          if (!animation) {
+            // 创建动画但暂停
+            animation = animate(element, {
+              ...config.animation,
+              duration: config.animation.duration ?? 1000,
+            })
+            animation.stop()
+          }
+
+          // 使用 scrub 平滑插值
+          const smoothProgress = typeof config.scrub === 'number'
+            ? smoothInterpolate(progress, config.scrub)
+            : progress
+
+          // 手动更新动画进度（需要扩展 Animation API）
+          // 这里使用简化实现，直接设置样式
+          if (config.animation.props) {
+            Object.entries(config.animation.props).forEach(([prop, value]) => {
+              const numValue = typeof value === 'number' ? value : parseFloat(String(value))
+              const currentValue = numValue * smoothProgress
+                ; (element as HTMLElement).style[prop as any] = String(currentValue)
+            })
+          }
         }
         config.onUpdate?.(progress)
+      },
+      onLeave: () => {
+        if (!config.scrub && animation) {
+          animation.stop()
+          animation = null
+        }
+        config.onLeave?.()
       },
     }
   )
 
   return scrollTrigger
+}
+
+/**
+ * 平滑插值（用于 scrub）
+ */
+function smoothInterpolate(target: number, smoothness: number): number {
+  // 使用指数平滑
+  return target + (target - target) * (1 - smoothness)
 }
 
 

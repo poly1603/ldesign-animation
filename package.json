@@ -1,7 +1,7 @@
 {
   "name": "@ldesign/animation",
-  "version": "0.1.1",
-  "description": "LDesign 动画库 - CSS/JS 动画、过渡效果、滚动动画、物理动画",
+  "version": "0.2.0",
+  "description": "LDesign 动画库 - CSS/JS 动画、过渡效果、滚动动画、物理动画（性能优化版）",
   "keywords": [
     "ldesign",
     "animation",
@@ -87,15 +87,7 @@
       "types": "./es/vue/*.d.ts",
       "import": "./es/vue/*.js",
       "require": "./lib/vue/*.cjs"
-    },
-    "./es/vue/components/AnimatedBox.vue.css": "./es/vue/components/AnimatedBox.vue.css",
-    "./es/vue/components/DraggableBox.vue.css": "./es/vue/components/DraggableBox.vue.css",
-    "./es/vue/components/ScrollReveal.vue.css": "./es/vue/components/ScrollReveal.vue.css",
-    "./es/vue/index.css": "./es/vue/index.css",
-    "./lib/vue/components/AnimatedBox.vue.css": "./lib/vue/components/AnimatedBox.vue.css",
-    "./lib/vue/components/DraggableBox.vue.css": "./lib/vue/components/DraggableBox.vue.css",
-    "./lib/vue/components/ScrollReveal.vue.css": "./lib/vue/components/ScrollReveal.vue.css",
-    "./lib/vue/index.css": "./lib/vue/index.css"
+    }
   },
   "main": "./lib/index.cjs",
   "module": "./es/index.js",
@@ -107,8 +99,7 @@
     "LICENSE",
     "package.json",
     "es",
-    "lib",
-    "dist"
+    "lib"
   ],
   "scripts": {
     "build": "ldesign-builder build",

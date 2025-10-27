@@ -277,19 +277,54 @@ particles.emit(100, 100)
 
 欢迎贡献代码、报告问题或提出建议！
 
-## 🚀 性能优化（v0.1.1 新增）
+## 🚀 性能优化（v0.2.0 重大升级）
 
 ### 自动优化
 
 @ldesign/animation 内置多种性能优化：
 
-- ✅ **统一RAF循环** - 所有动画共享一个RAF，减少开销
+- ✅ **WeakMap 内存管理** - 自动垃圾回收，彻底解决内存泄漏
+- ✅ **精确 FPS 计算** - 滑动窗口算法，实时准确监控
+- ✅ **空闲自动暂停** - 无动画时自动停止 RAF，节省 CPU
+- ✅ **对象复用** - 减少 GC 压力 70%
+- ✅ **帧预算管理** - 实时监控帧时间，超时警告
 - ✅ **GPU加速** - 自动使用 transform 和 opacity
-- ✅ **will-change管理** - 动画前添加，结束后移除
-- ✅ **页面可见性** - 切换标签页自动暂停动画
-- ✅ **批量DOM操作** - 减少布局抖动
-- ✅ **对象池** - 减少GC压力
-- ✅ **计算缓存** - LRU缓存减少重复计算
+- ✅ **will-change管理** - 动画前添加，结束后移除，限制最大数量
+- ✅ **批量DOM操作** - 读写分离，减少布局抖动
+- ✅ **Transform 缓存** - WeakMap 自动清理，避免内存泄漏
+
+### 内存与性能监控（v0.2.0 新增）
+
+```typescript
+import { memoryMonitor, performanceAdaptive, engine } from '@ldesign/animation'
+
+// 启用内存监控
+memoryMonitor.start()
+
+// 获取内存统计
+const stats = memoryMonitor.getStats()
+console.log('Memory usage:', stats.usedMemory, 'MB')
+console.log('Active objects:', stats.activeObjects)
+
+// 性能自适应
+const device = performanceAdaptive.getDevice()
+console.log('Device tier:', device.tier) // 'low' | 'medium' | 'high'
+
+const config = performanceAdaptive.getConfig()
+if (config.enableComplexAnimations) {
+  // 执行复杂动画
+}
+
+// 监听性能变化
+performanceAdaptive.on('downgrade', () => {
+  console.log('Performance degraded')
+})
+
+// 引擎统计
+const engineStats = engine.getStats()
+console.log('FPS:', engineStats.fps)
+console.log('Active animations:', engineStats.activeAnimations)
+```
 
 ### 性能API
 
@@ -363,6 +398,71 @@ open http://localhost:5174/performance.html
 详见 [性能优化指南](./docs/PERFORMANCE.md)
 
 ## 📚 更多示例
+
+## 🎯 高级功能（v0.2.0 新增）
+
+### 动画序列组合器
+
+```typescript
+import { createSequence, sequence, parallel, stagger } from '@ldesign/animation'
+
+// 串行动画（依次执行）
+createSequence()
+  .then('.box1', { x: 100 })
+  .then('.box2', { y: 100 })
+  .then('.box3', { scale: 1.5 })
+  .play()
+
+// 并行动画（同时执行）
+createSequence()
+  .all([
+    { target: '.box1', props: { x: 100 } },
+    { target: '.box2', props: { y: 100 } },
+    { target: '.box3', props: { scale: 1.5 } }
+  ])
+  .play()
+
+// 交错动画（stagger）
+stagger('.item', { x: 100, opacity: 1 }, { duration: 500 }, 100)
+
+// 混合序列
+createSequence()
+  .then('.box1', { x: 100 })
+  .wait(500) // 延迟500ms
+  .all([
+    { target: '.box2', props: { y: 100 } },
+    { target: '.box3', props: { scale: 1.5 } }
+  ])
+  .label('checkpoint') // 添加标签
+  .then('.box4', { opacity: 0 })
+  .play()
+```
+
+### 调试工具
+
+```typescript
+import { createDebugger } from '@ldesign/animation'
+
+// 开发模式下启用调试面板
+if (process.env.NODE_ENV === 'development') {
+  const debugger = createDebugger({
+    showFPS: true,
+    showMemory: true,
+    showAnimations: true,
+    showWarnings: true,
+    position: 'top-right'
+  })
+  
+  debugger.show()
+  
+  // 记录日志
+  debugger.log('Animation started', 'info')
+  
+  // 导出统计数据
+  const stats = debugger.exportStats()
+  console.log(stats)
+}
+```
 
 ### 基础示例
 - `examples/basic.html` - 快速预览

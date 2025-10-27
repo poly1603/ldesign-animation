@@ -6,19 +6,30 @@
  */
 
 /**
- * will-change 管理器
+ * will-change 管理器（优化版 - 内存安全）
  */
 export class WillChangeManager {
-  private elements: Map<Element, Set<string>> = new Map()
-  private timers: Map<Element, number> = new Map()
+  // 使用 WeakMap 避免内存泄漏
+  private elements: WeakMap<Element, Set<string>> = new WeakMap()
+  private timers: WeakMap<Element, number> = new WeakMap()
+  // 活动元素追踪（用于批量操作）
+  private activeElements: Set<Element> = new Set()
   private removeDelay: number = 1000 // 动画结束后1秒移除
+  private maxActiveElements: number = 100 // 最大活动元素数量
 
   /**
    * 添加 will-change 属性
    */
   add(element: HTMLElement | SVGElement, properties: string[]): void {
+    // 检查活动元素数量，防止过度使用
+    if (this.activeElements.size >= this.maxActiveElements && !this.activeElements.has(element)) {
+      console.warn('[WillChangeManager] Max active elements reached, skipping will-change')
+      return
+    }
+
     if (!this.elements.has(element)) {
       this.elements.set(element, new Set())
+      this.activeElements.add(element)
     }
 
     const props = this.elements.get(element)!
@@ -28,9 +39,9 @@ export class WillChangeManager {
     this.updateElement(element)
 
     // 清除已有的移除计时器
-    if (this.timers.has(element)) {
-      clearTimeout(this.timers.get(element)!)
-      this.timers.delete(element)
+    const existingTimer = this.timers.get(element)
+    if (existingTimer) {
+      clearTimeout(existingTimer)
     }
   }
 
@@ -42,7 +53,7 @@ export class WillChangeManager {
     const timer = window.setTimeout(() => {
       if (!properties) {
         // 移除所有
-        this.elements.delete(element)
+        this.activeElements.delete(element)
         element.style.willChange = 'auto'
       } else {
         // 移除指定属性
@@ -50,14 +61,13 @@ export class WillChangeManager {
         if (props) {
           properties.forEach(prop => props.delete(prop))
           if (props.size === 0) {
-            this.elements.delete(element)
+            this.activeElements.delete(element)
             element.style.willChange = 'auto'
           } else {
             this.updateElement(element)
           }
         }
       }
-      this.timers.delete(element)
     }, this.removeDelay)
 
     this.timers.set(element, timer)
@@ -82,9 +92,8 @@ export class WillChangeManager {
     const timer = this.timers.get(element)
     if (timer) {
       clearTimeout(timer)
-      this.timers.delete(element)
     }
-    this.elements.delete(element)
+    this.activeElements.delete(element)
     element.style.willChange = 'auto'
   }
 
@@ -92,12 +101,28 @@ export class WillChangeManager {
    * 清空所有
    */
   clear(): void {
-    this.timers.forEach(timer => clearTimeout(timer))
-    this.elements.forEach((_, element) => {
+    this.activeElements.forEach((element) => {
+      const timer = this.timers.get(element)
+      if (timer) {
+        clearTimeout(timer)
+      }
       (element as HTMLElement).style.willChange = 'auto'
     })
-    this.elements.clear()
-    this.timers.clear()
+    this.activeElements.clear()
+  }
+
+  /**
+   * 获取活动元素数量
+   */
+  getActiveCount(): number {
+    return this.activeElements.size
+  }
+
+  /**
+   * 设置最大活动元素数量
+   */
+  setMaxActiveElements(max: number): void {
+    this.maxActiveElements = max
   }
 }
 
