@@ -1,0 +1,18 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@ldesign/animation-vue": ["../src"],
+      "@ldesign/animation-vue/*": ["../src/*"],
+      "@ldesign/animation-core": ["../../core/src"],
+      "@ldesign/animation-core/*": ["../../core/src/*"]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "*.ts"
+  ]
+}
+
+

@@ -1,0 +1,19 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "baseUrl": ".",
+    "paths": {
+      "@ldesign/animation-solid": ["../src"],
+      "@ldesign/animation-solid/*": ["../src/*"],
+      "@ldesign/animation-core": ["../../core/src"],
+      "@ldesign/animation-core/*": ["../../core/src/*"]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "*.ts"
+  ]
+}
+

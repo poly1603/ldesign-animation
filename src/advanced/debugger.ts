@@ -324,7 +324,7 @@ export function createDebugger(config?: DebuggerConfig): AnimationDebugger {
 /**
  * 全局调试器实例（开发模式）
  */
-export const debugger = typeof process !== 'undefined' && process.env?.NODE_ENV === 'development'
+export const animationDebugger = typeof process !== 'undefined' && process.env?.NODE_ENV === 'development'
   ? new AnimationDebugger()
   : null
 

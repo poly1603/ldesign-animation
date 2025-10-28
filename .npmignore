@@ -1,0 +1,54 @@
+# 源代码
+src/
+packages/*/src/
+
+# 测试
+__tests__/
+*.test.ts
+*.spec.ts
+coverage/
+
+# 配置文件
+*.config.ts
+*.config.js
+tsconfig.json
+vitest.config.ts
+playwright.config.ts
+
+# 示例
+examples/
+packages/*/examples/
+
+# 脚本
+scripts/
+
+# 文档（保留 README）
+*.md
+!README.md
+!packages/*/README.md
+docs/
+
+# 工具
+.vscode/
+.idea/
+.ldesign/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# pnpm
+pnpm-workspace.yaml
+pnpm-lock.yaml
+
+# Node
+node_modules/
+packages/*/node_modules/
+
+# 临时文件
+*.log
+.DS_Store
+.env
+.env.local
+

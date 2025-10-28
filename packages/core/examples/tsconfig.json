@@ -1,0 +1,16 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@ldesign/animation-core": ["../src"],
+      "@ldesign/animation-core/*": ["../src/*"]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "*.ts"
+  ]
+}
+
+

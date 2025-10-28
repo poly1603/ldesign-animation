@@ -1,18 +1,21 @@
 {
   "name": "@ldesign/animation",
   "version": "0.2.0",
-  "description": "LDesign 动画库 - CSS/JS 动画、过渡效果、滚动动画、物理动画（性能优化版）",
+  "description": "LDesign 动画库 - 完整的动画解决方案（包含 core、vue、react、lit 子包）",
   "keywords": [
     "ldesign",
     "animation",
     "transition",
-    "gsap",
     "motion",
     "vue",
     "react",
+    "lit",
+    "web-components",
     "3d-transforms",
     "filters",
-    "scroll-animation"
+    "scroll-animation",
+    "physics",
+    "gesture"
   ],
   "author": "LDesign Team",
   "license": "MIT",
@@ -23,70 +26,41 @@
       "import": "./es/index.js",
       "require": "./lib/index.cjs"
     },
-    "./core/*": {
-      "types": "./es/core/*.d.ts",
-      "import": "./es/core/*.js",
-      "require": "./lib/core/*.cjs"
-    },
-    "./effects/*": {
-      "types": "./es/effects/*.d.ts",
-      "import": "./es/effects/*.js",
-      "require": "./lib/effects/*.cjs"
-    },
-    "./gesture/*": {
-      "types": "./es/gesture/*.d.ts",
-      "import": "./es/gesture/*.js",
-      "require": "./lib/gesture/*.cjs"
-    },
-    "./physics/*": {
-      "types": "./es/physics/*.d.ts",
-      "import": "./es/physics/*.js",
-      "require": "./lib/physics/*.cjs"
-    },
-    "./react": {
-      "types": "./es/react/index.d.ts",
-      "import": "./es/react/index.js",
-      "require": "./lib/react/index.cjs"
-    },
-    "./react/*": {
-      "types": "./es/react/*.d.ts",
-      "import": "./es/react/*.js",
-      "require": "./lib/react/*.cjs"
-    },
-    "./scroll/*": {
-      "types": "./es/scroll/*.d.ts",
-      "import": "./es/scroll/*.js",
-      "require": "./lib/scroll/*.cjs"
-    },
-    "./svg/*": {
-      "types": "./es/svg/*.d.ts",
-      "import": "./es/svg/*.js",
-      "require": "./lib/svg/*.cjs"
-    },
-    "./timeline/*": {
-      "types": "./es/timeline/*.d.ts",
-      "import": "./es/timeline/*.js",
-      "require": "./lib/timeline/*.cjs"
-    },
-    "./transition/*": {
-      "types": "./es/transition/*.d.ts",
-      "import": "./es/transition/*.js",
-      "require": "./lib/transition/*.cjs"
-    },
-    "./utils/*": {
-      "types": "./es/utils/*.d.ts",
-      "import": "./es/utils/*.js",
-      "require": "./lib/utils/*.cjs"
+    "./core": {
+      "types": "./packages/core/es/index.d.ts",
+      "import": "./packages/core/es/index.js",
+      "require": "./packages/core/lib/index.cjs"
     },
     "./vue": {
-      "types": "./es/vue/index.d.ts",
-      "import": "./es/vue/index.js",
-      "require": "./lib/vue/index.cjs"
+      "types": "./packages/vue/es/index.d.ts",
+      "import": "./packages/vue/es/index.js",
+      "require": "./packages/vue/lib/index.cjs"
     },
-    "./vue/*": {
-      "types": "./es/vue/*.d.ts",
-      "import": "./es/vue/*.js",
-      "require": "./lib/vue/*.cjs"
+    "./react": {
+      "types": "./packages/react/es/index.d.ts",
+      "import": "./packages/react/es/index.js",
+      "require": "./packages/react/lib/index.cjs"
+    },
+    "./lit": {
+      "types": "./packages/lit/es/index.d.ts",
+      "import": "./packages/lit/es/index.js",
+      "require": "./packages/lit/lib/index.cjs"
+    },
+    "./solid": {
+      "types": "./packages/solid/es/index.d.ts",
+      "import": "./packages/solid/es/index.js",
+      "require": "./packages/solid/lib/index.cjs"
+    },
+    "./svelte": {
+      "types": "./packages/svelte/es/index.d.ts",
+      "import": "./packages/svelte/es/index.js",
+      "require": "./packages/svelte/lib/index.cjs",
+      "svelte": "./packages/svelte/es/index.js"
+    },
+    "./angular": {
+      "types": "./packages/angular/es/index.d.ts",
+      "import": "./packages/angular/es/index.js",
+      "require": "./packages/angular/lib/index.cjs"
     }
   },
   "main": "./lib/index.cjs",
@@ -99,27 +73,62 @@
     "LICENSE",
     "package.json",
     "es",
-    "lib"
+    "lib",
+    "dist",
+    "packages/*/es",
+    "packages/*/lib",
+    "packages/*/dist",
+    "packages/*/package.json",
+    "packages/*/README.md"
   ],
   "scripts": {
-    "build": "ldesign-builder build",
-    "build:watch": "ldesign-builder build --watch",
-    "dev": "ldesign-builder build --mode development --watch",
-    "clean": "rimraf es lib dist coverage",
+    "build": "pnpm run build:packages",
+    "build:watch": "pnpm run build:packages:watch",
+    "dev": "pnpm run build:packages:dev",
+    "clean": "pnpm run clean:root && pnpm run clean:packages",
+    "clean:root": "rimraf es lib dist coverage",
+    "clean:packages": "pnpm --filter './packages/*' run clean",
+    "build:packages": "pnpm run build:core && pnpm run build:frameworks",
+    "build:packages:watch": "pnpm --parallel --filter './packages/*' run build:watch",
+    "build:packages:dev": "pnpm --parallel --filter './packages/*' run dev",
+    "build:core": "pnpm --filter '@ldesign/animation-core' run build",
+    "build:frameworks": "pnpm --parallel --filter '@ldesign/animation-vue' --filter '@ldesign/animation-react' --filter '@ldesign/animation-lit' --filter '@ldesign/animation-solid' --filter '@ldesign/animation-svelte' --filter '@ldesign/animation-angular' run build",
+    "build:vue": "pnpm --filter '@ldesign/animation-vue' run build",
+    "build:react": "pnpm --filter '@ldesign/animation-react' run build",
+    "build:lit": "pnpm --filter '@ldesign/animation-lit' run build",
+    "build:solid": "pnpm --filter '@ldesign/animation-solid' run build",
+    "build:svelte": "pnpm --filter '@ldesign/animation-svelte' run build",
+    "build:angular": "pnpm --filter '@ldesign/animation-angular' run build",
+    "dev:examples": "node scripts/dev-examples.js",
+    "build:examples": "node scripts/build-examples.js",
     "prepublishOnly": "pnpm run clean && pnpm run build",
     "lint": "eslint . --fix"
   },
   "dependencies": {
+    "@ldesign/animation-core": "workspace:*",
+    "@ldesign/animation-vue": "workspace:*",
+    "@ldesign/animation-react": "workspace:*",
+    "@ldesign/animation-lit": "workspace:*",
+    "@ldesign/animation-solid": "workspace:*",
+    "@ldesign/animation-svelte": "workspace:*",
+    "@ldesign/animation-angular": "workspace:*",
     "@ldesign/shared": "workspace:*"
   },
   "peerDependencies": {
     "vue": "^3.3.0",
-    "react": "^18.0.0"
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "lit": "^3.0.0",
+    "solid-js": "^1.8.0",
+    "svelte": "^4.0.0 || ^5.0.0",
+    "@angular/core": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "rxjs": "^7.8.0"
   },
   "devDependencies": {
     "@ldesign/builder": "workspace:*",
     "@antfu/eslint-config": "^6.0.0",
     "eslint": "^9.18.0",
+    "rimraf": "^6.0.1",
     "typescript": "^5.7.3"
   },
   "peerDependenciesMeta": {
@@ -127,6 +136,24 @@
       "optional": true
     },
     "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "lit": {
+      "optional": true
+    },
+    "solid-js": {
+      "optional": true
+    },
+    "svelte": {
+      "optional": true
+    },
+    "@angular/core": {
+      "optional": true
+    },
+    "rxjs": {
       "optional": true
     }
   }

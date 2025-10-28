@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>@ldesign/animation-core - 演示示例</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 48px;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .header p {
+      font-size: 18px;
+      opacity: 0.9;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .demo-card {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .demo-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .demo-card h2 {
+      font-size: 24px;
+      margin-bottom: 15px;
+      color: #667eea;
+    }
+
+    .demo-card p {
+      color: #666;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .demo-box {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 10px;
+      margin: 20px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn:active {
+      transform: scale(0.95);
+    }
+
+    .timeline-demo {
+      display: flex;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .timeline-box {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+
+    .scroll-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 40px;
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+    }
+
+    .scroll-content {
+      text-align: center;
+      opacity: 0;
+      transform: translateY(50px);
+    }
+
+    .svg-demo {
+      width: 100%;
+      height: 200px;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎨 @ldesign/animation-core</h1>
+      <p>强大的动画核心库 - 演示示例</p>
+    </div>
+
+    <div class="demo-grid">
+      <!-- 基础动画 -->
+      <div class="demo-card">
+        <h2>🎯 基础动画</h2>
+        <p>点击方块查看基础动画效果</p>
+        <div class="demo-box" id="basic-box">点击我</div>
+        <button class="btn" id="basic-btn">播放动画</button>
+      </div>
+
+      <!-- 时间轴动画 -->
+      <div class="demo-card">
+        <h2>⏱️ 时间轴动画</h2>
+        <p>多个动画按顺序播放</p>
+        <div class="timeline-demo">
+          <div class="timeline-box" id="timeline-box-1"></div>
+          <div class="timeline-box" id="timeline-box-2"></div>
+          <div class="timeline-box" id="timeline-box-3"></div>
+        </div>
+        <button class="btn" id="timeline-btn">播放时间轴</button>
+      </div>
+
+      <!-- 物理动画 -->
+      <div class="demo-card">
+        <h2>🎪 物理动画</h2>
+        <p>真实的弹簧物理效果</p>
+        <div class="demo-box" id="physics-box">弹簧</div>
+        <button class="btn" id="physics-btn">物理动画</button>
+      </div>
+
+      <!-- 手势动画 -->
+      <div class="demo-card">
+        <h2>🖱️ 手势拖拽</h2>
+        <p>拖拽方块，体验惯性效果</p>
+        <div class="demo-box" id="gesture-box">拖拽我</div>
+      </div>
+
+      <!-- SVG 动画 -->
+      <div class="demo-card">
+        <h2>🎨 SVG 动画</h2>
+        <p>SVG 路径绘制动画</p>
+        <svg class="svg-demo" id="svg-demo" viewBox="0 0 100 100">
+          <path d="M 10 50 Q 30 10, 50 50 T 90 50" 
+                stroke="#667eea" 
+                stroke-width="2" 
+                fill="none" 
+                id="svg-path"/>
+        </svg>
+        <button class="btn" id="svg-btn">绘制路径</button>
+      </div>
+
+      <!-- 缓动函数 -->
+      <div class="demo-card">
+        <h2>📈 缓动函数</h2>
+        <p>不同的缓动效果对比</p>
+        <div class="demo-box" id="easing-box">缓动</div>
+        <button class="btn" id="easing-btn">缓动动画</button>
+      </div>
+    </div>
+
+    <!-- 滚动动画部分 -->
+    <div class="scroll-section" id="scroll-section">
+      <div class="scroll-content" id="scroll-content">
+        <h2>📜 滚动触发动画</h2>
+        <p>滚动到这里触发动画效果</p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
+
+

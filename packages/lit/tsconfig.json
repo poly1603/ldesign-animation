@@ -1,0 +1,32 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./es",
+    "rootDir": "./src",
+    "declaration": true,
+    "declarationMap": true,
+    "composite": true,
+    "baseUrl": ".",
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@ldesign/animation-core": ["../core/src"],
+      "@ldesign/shared": ["../../../shared/src"]
+    }
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "es",
+    "lib",
+    "examples",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ]
+}
+
+

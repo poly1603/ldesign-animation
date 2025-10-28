@@ -1,0 +1,109 @@
+{
+  "name": "@ldesign/animation-core",
+  "version": "0.1.0",
+  "description": "LDesign 动画核心库 - 提供底层动画引擎和核心功能",
+  "keywords": [
+    "ldesign",
+    "animation",
+    "core",
+    "timeline",
+    "easing",
+    "transition",
+    "physics",
+    "gesture"
+  ],
+  "author": "LDesign Team",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./es/index.d.ts",
+      "import": "./es/index.js",
+      "require": "./lib/index.cjs"
+    },
+    "./core": {
+      "types": "./es/core/index.d.ts",
+      "import": "./es/core/index.js",
+      "require": "./lib/core/index.cjs"
+    },
+    "./types": {
+      "types": "./es/types/index.d.ts",
+      "import": "./es/types/index.js",
+      "require": "./lib/types/index.cjs"
+    },
+    "./effects": {
+      "types": "./es/effects/index.d.ts",
+      "import": "./es/effects/index.js",
+      "require": "./lib/effects/index.cjs"
+    },
+    "./physics": {
+      "types": "./es/physics/index.d.ts",
+      "import": "./es/physics/index.js",
+      "require": "./lib/physics/index.cjs"
+    },
+    "./timeline": {
+      "types": "./es/timeline/index.d.ts",
+      "import": "./es/timeline/index.js",
+      "require": "./lib/timeline/index.cjs"
+    },
+    "./scroll": {
+      "types": "./es/scroll/index.d.ts",
+      "import": "./es/scroll/index.js",
+      "require": "./lib/scroll/index.cjs"
+    },
+    "./svg": {
+      "types": "./es/svg/index.d.ts",
+      "import": "./es/svg/index.js",
+      "require": "./lib/svg/index.cjs"
+    },
+    "./gesture": {
+      "types": "./es/gesture/index.d.ts",
+      "import": "./es/gesture/index.js",
+      "require": "./lib/gesture/index.cjs"
+    },
+    "./utils": {
+      "types": "./es/utils/index.d.ts",
+      "import": "./es/utils/index.js",
+      "require": "./lib/utils/index.cjs"
+    }
+  },
+  "main": "./lib/index.cjs",
+  "module": "./es/index.js",
+  "types": "./es/index.d.ts",
+  "unpkg": "./dist/index.min.js",
+  "jsdelivr": "./dist/index.min.js",
+  "files": [
+    "README.md",
+    "LICENSE",
+    "package.json",
+    "es",
+    "lib",
+    "dist"
+  ],
+  "scripts": {
+    "build": "ldesign-builder build -f esm,cjs,umd,dts",
+    "build:watch": "ldesign-builder build -f esm,cjs,umd,dts --watch",
+    "dev": "ldesign-builder build -f esm,cjs,dts --watch",
+    "clean": "rimraf es lib dist coverage",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui",
+    "prepublishOnly": "pnpm run clean && pnpm run build",
+    "lint": "eslint . --fix"
+  },
+  "dependencies": {
+    "@ldesign/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@ldesign/builder": "workspace:*",
+    "@antfu/eslint-config": "^6.0.0",
+    "@vitest/ui": "^3.2.4",
+    "eslint": "^9.18.0",
+    "jsdom": "^25.0.1",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.7.3",
+    "vitest": "^3.2.4"
+  }
+}

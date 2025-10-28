@@ -1,0 +1,74 @@
+{
+  "name": "@ldesign/animation-vue",
+  "version": "0.1.0",
+  "description": "LDesign 动画库 Vue 3 集成 - 提供 Vue 组件、指令和组合式函数",
+  "keywords": [
+    "ldesign",
+    "animation",
+    "vue",
+    "vue3",
+    "composition-api",
+    "directive",
+    "component"
+  ],
+  "author": "LDesign Team",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./es/index.d.ts",
+      "import": "./es/index.js",
+      "require": "./lib/index.cjs"
+    },
+    "./components": {
+      "types": "./es/components/index.d.ts",
+      "import": "./es/components/index.js",
+      "require": "./lib/components/index.cjs"
+    },
+    "./composables": {
+      "types": "./es/composables/index.d.ts",
+      "import": "./es/composables/index.js",
+      "require": "./lib/composables/index.cjs"
+    },
+    "./directives": {
+      "types": "./es/directives/index.d.ts",
+      "import": "./es/directives/index.js",
+      "require": "./lib/directives/index.cjs"
+    }
+  },
+  "main": "./lib/index.cjs",
+  "module": "./es/index.js",
+  "types": "./es/index.d.ts",
+  "files": [
+    "README.md",
+    "LICENSE",
+    "package.json",
+    "es",
+    "lib"
+  ],
+  "scripts": {
+    "build": "ldesign-builder build",
+    "build:watch": "ldesign-builder build --watch",
+    "dev": "ldesign-builder build --mode development --watch",
+    "clean": "rimraf es lib dist coverage",
+    "prepublishOnly": "pnpm run clean && pnpm run build",
+    "lint": "eslint . --fix"
+  },
+  "dependencies": {
+    "@ldesign/animation-core": "workspace:*",
+    "@ldesign/shared": "workspace:*"
+  },
+  "peerDependencies": {
+    "vue": "^3.3.0"
+  },
+  "devDependencies": {
+    "@ldesign/builder": "workspace:*",
+    "@antfu/eslint-config": "^6.0.0",
+    "eslint": "^9.18.0",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.7.3",
+    "vue": "^3.5.18"
+  }
+}
+
+
