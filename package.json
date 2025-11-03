@@ -82,9 +82,9 @@
     "packages/*/README.md"
   ],
   "scripts": {
-    "build": "pnpm run build:packages",
+    "build": "ldesign-builder build -f esm,cjs,dts",
     "build:watch": "pnpm run build:packages:watch",
-    "dev": "pnpm run build:packages:dev",
+    "dev": "ldesign-builder build -f esm,cjs,dts --watch",
     "clean": "pnpm run clean:root && pnpm run clean:packages",
     "clean:root": "rimraf es lib dist coverage",
     "clean:packages": "pnpm --filter './packages/*' run clean",
