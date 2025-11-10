@@ -101,7 +101,6 @@
     "build:angular": "pnpm --filter '@ldesign/animation-angular' run build",
     "dev:examples": "node scripts/dev-examples.js",
     "build:examples": "node scripts/build-examples.js",
-    "prepublishOnly": "pnpm run clean && pnpm run build",
     "lint": "eslint . --fix"
   },
   "dependencies": {

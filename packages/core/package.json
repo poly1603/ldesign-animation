@@ -90,7 +90,6 @@
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
-    "prepublishOnly": "pnpm run clean && pnpm run build",
     "lint": "eslint . --fix"
   },
   "dependencies": {

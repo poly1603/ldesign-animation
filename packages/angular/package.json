@@ -34,7 +34,6 @@
     "build:watch": "ldesign-builder build -f esm,cjs,dts --watch",
     "dev": "ldesign-builder build -f esm,cjs,dts --watch",
     "clean": "rimraf es lib dist coverage",
-    "prepublishOnly": "pnpm run clean && pnpm run build",
     "lint": "eslint . --fix"
   },
   "dependencies": {
@@ -55,4 +54,3 @@
     "typescript": "^5.7.3"
   }
 }
-
