@@ -1,15 +1,13 @@
 {
   "name": "@ldesign/animation",
   "version": "0.2.0",
-  "description": "LDesign 动画库 - 完整的动画解决方案（包含 core、vue、react、lit 子包）",
+  "description": "LDesign 动画库 - 完整的动画解决方案（包含 core、vue 子包）",
   "keywords": [
     "ldesign",
     "animation",
     "transition",
     "motion",
     "vue",
-    "react",
-    "lit",
     "web-components",
     "3d-transforms",
     "filters",
@@ -35,32 +33,6 @@
       "types": "./packages/vue/es/index.d.ts",
       "import": "./packages/vue/es/index.js",
       "require": "./packages/vue/lib/index.cjs"
-    },
-    "./react": {
-      "types": "./packages/react/es/index.d.ts",
-      "import": "./packages/react/es/index.js",
-      "require": "./packages/react/lib/index.cjs"
-    },
-    "./lit": {
-      "types": "./packages/lit/es/index.d.ts",
-      "import": "./packages/lit/es/index.js",
-      "require": "./packages/lit/lib/index.cjs"
-    },
-    "./solid": {
-      "types": "./packages/solid/es/index.d.ts",
-      "import": "./packages/solid/es/index.js",
-      "require": "./packages/solid/lib/index.cjs"
-    },
-    "./svelte": {
-      "types": "./packages/svelte/es/index.d.ts",
-      "import": "./packages/svelte/es/index.js",
-      "require": "./packages/svelte/lib/index.cjs",
-      "svelte": "./packages/svelte/es/index.js"
-    },
-    "./angular": {
-      "types": "./packages/angular/es/index.d.ts",
-      "import": "./packages/angular/es/index.js",
-      "require": "./packages/angular/lib/index.cjs"
     }
   },
   "main": "./lib/index.cjs",
@@ -92,13 +64,8 @@
     "build:packages:watch": "pnpm --parallel --filter './packages/*' run build:watch",
     "build:packages:dev": "pnpm --parallel --filter './packages/*' run dev",
     "build:core": "pnpm --filter '@ldesign/animation-core' run build",
-    "build:frameworks": "pnpm --parallel --filter '@ldesign/animation-vue' --filter '@ldesign/animation-react' --filter '@ldesign/animation-lit' --filter '@ldesign/animation-solid' --filter '@ldesign/animation-svelte' --filter '@ldesign/animation-angular' run build",
+    "build:frameworks": "pnpm --filter '@ldesign/animation-vue' run build",
     "build:vue": "pnpm --filter '@ldesign/animation-vue' run build",
-    "build:react": "pnpm --filter '@ldesign/animation-react' run build",
-    "build:lit": "pnpm --filter '@ldesign/animation-lit' run build",
-    "build:solid": "pnpm --filter '@ldesign/animation-solid' run build",
-    "build:svelte": "pnpm --filter '@ldesign/animation-svelte' run build",
-    "build:angular": "pnpm --filter '@ldesign/animation-angular' run build",
     "dev:examples": "node scripts/dev-examples.js",
     "build:examples": "node scripts/build-examples.js",
     "lint": "eslint . --fix"
@@ -106,22 +73,10 @@
   "dependencies": {
     "@ldesign/animation-core": "workspace:*",
     "@ldesign/animation-vue": "workspace:*",
-    "@ldesign/animation-react": "workspace:*",
-    "@ldesign/animation-lit": "workspace:*",
-    "@ldesign/animation-solid": "workspace:*",
-    "@ldesign/animation-svelte": "workspace:*",
-    "@ldesign/animation-angular": "workspace:*",
     "@ldesign/shared": "workspace:*"
   },
   "peerDependencies": {
-    "vue": "^3.3.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "lit": "^3.0.0",
-    "solid-js": "^1.8.0",
-    "svelte": "^4.0.0 || ^5.0.0",
-    "@angular/core": "^17.0.0 || ^18.0.0 || ^19.0.0",
-    "rxjs": "^7.8.0"
+    "vue": "^3.3.0"
   },
   "devDependencies": {
     "@ldesign/builder": "workspace:*",
@@ -132,27 +87,6 @@
   },
   "peerDependenciesMeta": {
     "vue": {
-      "optional": true
-    },
-    "react": {
-      "optional": true
-    },
-    "react-dom": {
-      "optional": true
-    },
-    "lit": {
-      "optional": true
-    },
-    "solid-js": {
-      "optional": true
-    },
-    "svelte": {
-      "optional": true
-    },
-    "@angular/core": {
-      "optional": true
-    },
-    "rxjs": {
       "optional": true
     }
   }
